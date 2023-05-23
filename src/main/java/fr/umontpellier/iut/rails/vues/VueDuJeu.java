@@ -55,7 +55,7 @@ public class VueDuJeu extends VBox {
             if (change.wasRemoved()) {
                 for (IDestination destination : change.getRemoved()) {
                     for (Node n : destinationsInitiales.getChildren()){
-                        if (((Label) n).getText().equals(destination.getVilles().toString())){
+                        if (((Button) n).getText().equals(destination.getVilles().toString())){
                             destinationsInitiales.getChildren().remove(n);
                             break;
                         }
