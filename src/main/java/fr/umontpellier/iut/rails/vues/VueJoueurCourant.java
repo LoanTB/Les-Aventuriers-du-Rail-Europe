@@ -6,6 +6,7 @@ import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,7 +49,9 @@ public class VueJoueurCourant extends VBox {
             if (ct.getAncre()) {
                 carte += "-A";
             }
-            carteTransport.getChildren().add(new ImageView("images/cartesWagons/" + carte + ".png"));
+            Button bct = new Button();
+            bct.setGraphic(new ImageView("images/cartesWagons/" + carte + ".png"));
+            carteTransport.getChildren().add(bct);
         }
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
