@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="270.0" prefWidth="293.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxml.MenuDemarrage">
+   <children>
+      <VBox prefHeight="270.0" prefWidth="293.0">
+         <children>
+            <Label text="Aventuriers du Rail" textAlignment="CENTER">
+               <font>
+                  <Font name="MathJax_Script-Regular" size="24.0" />
+               </font>
+            </Label>
+            <Label text="Veuillez entrer le noms des joueurs" />
+            <TextField />
+            <TextField />
+            <TextField />
+            <TextField />
+            <Button mnemonicParsing="false" text="jouer" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -5,10 +5,15 @@ import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.mecanique.data.Destination;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -23,13 +28,14 @@ import java.util.List;
  * (le joueur courant, les cartes Transport visibles, les destinations lors de l'étape d'initialisation de la partie, ...)
  * ainsi que les listeners à exécuter lorsque ces éléments changent
  */
-public class VueDuJeu extends VBox {
+public class VueDuJeu extends HBox {
 
     private final IJeu jeu;
     private VuePlateau plateau;
     private Button passer;
     private Label instruction;
     private VBox destinationsInitiales;
+    private Label choixPionsInitiales;
     private VueJoueurCourant vueJoueurCourant;
 
     public VueDuJeu(IJeu jeu) {
@@ -37,10 +43,24 @@ public class VueDuJeu extends VBox {
         plateau = new VuePlateau();
         passer = new Button("Passer");
         instruction = new Label();
+        instruction.setStyle("-fx-padding: 0 0 10 0");
+        instruction.setWrapText(true);
         destinationsInitiales = new VBox();
+        choixPionsInitiales = new Label();
         vueJoueurCourant = new VueJoueurCourant();
-        getChildren().addAll(vueJoueurCourant,instruction,destinationsInitiales,passer);
-        //getChildren().add(plateau);
+        vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
+        Label titre = new Label("Aventuriers du Rail");
+        titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center");
+        VBox menu = new VBox();
+        menu.getChildren().addAll(
+                titre,
+                vueJoueurCourant,
+                instruction,
+                destinationsInitiales,
+                passer);
+        menu.setMinWidth(200);
+        menu.setAlignment(Pos.TOP_CENTER);
+        getChildren().addAll(plateau,menu);
     }
 
     final ListChangeListener<IDestination> destinationsInitialesChanges = change -> {
@@ -75,7 +95,7 @@ public class VueDuJeu extends VBox {
         passer.addEventHandler(MouseEvent.MOUSE_CLICKED, actionPasserParDefaut);
         instruction.textProperty().bind(jeu.instructionProperty());
         vueJoueurCourant.creerBindings();
-        //plateau.creerBindings();
+        plateau.creerBindings();
     }
 
     public IJeu getJeu() {
