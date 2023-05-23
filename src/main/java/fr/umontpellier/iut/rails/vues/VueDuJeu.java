@@ -48,7 +48,10 @@ public class VueDuJeu extends VBox {
             if (change.wasAdded()) {
                 for (IDestination destination : change.getAddedSubList()) {
                     Button buttonDestination = new Button(destination.getVilles().toString());
-                    buttonDestination.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> destinationsInitiales.getChildren().remove(buttonDestination));
+                    buttonDestination.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                        destinationsInitiales.getChildren().remove(buttonDestination);
+                        getJeu().uneDestinationAEteChoisie(destination);
+                    });
                     destinationsInitiales.getChildren().add(buttonDestination);
                 }
             }
