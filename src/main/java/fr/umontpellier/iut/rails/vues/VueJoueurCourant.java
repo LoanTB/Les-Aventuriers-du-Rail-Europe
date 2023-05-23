@@ -7,6 +7,8 @@ import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -29,10 +31,24 @@ public class VueJoueurCourant extends VBox {
     }
 
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
+        String carte = new String();
         nomJoueur.setText(courant.getNom());
         carteTransport.getChildren().clear();
-        for(ICarteTransport ct : courant.getCartesTransport()){
-            carteTransport.getChildren().add(new Label("Couleur: "+ct.getStringCouleur()+", Ancre: "+ct.getAncre()));
+        for(ICarteTransport ct : courant.getCartesTransport()) {
+            if (ct.estWagon()) {
+                carte = "carte-WAGON-";
+            } else if (ct.estBateau()) {
+                carte = "carte-BATEAU-";
+            } else if (ct.estDouble()) {
+                carte = "carte-DOUBLE-";
+            } else if (ct.estJoker()) {
+                carte = "carte-JOKER-";
+            }
+            carte += ct.getStringCouleur();
+            if (ct.getAncre()) {
+                carte += "-A";
+            }
+            carteTransport.getChildren().add(new ImageView("images/cartesWagons/" + carte + ".png"));
         }
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
