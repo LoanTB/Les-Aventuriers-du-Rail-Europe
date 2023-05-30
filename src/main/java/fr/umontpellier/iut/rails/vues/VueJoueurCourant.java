@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
  *
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
-public class VueJoueurCourant extends VBox {
+public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire apparaître et disparaître le scrollPane en utilisant des bindings
 
     private Label nomJoueur;
     private VBox carteTransport;
@@ -37,6 +37,8 @@ public class VueJoueurCourant extends VBox {
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp.setPrefViewportHeight(350.0);
         getChildren().addAll(nomJoueur,sp,carteDestination);
+        sp.setManaged(false);
+        sp.setVisible(false);
     }
 
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
@@ -64,6 +66,8 @@ public class VueJoueurCourant extends VBox {
             Button bct = new Button();
             bct.setGraphic(iv);
             carteTransport.getChildren().add(bct);
+            sp.setManaged(true);
+            sp.setVisible(true);
         }
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
