@@ -37,6 +37,7 @@ public class VueJoueurCourant extends VBox {
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
         String carte = new String();
         nomJoueur.setText(courant.getNom());
+        nomJoueur.setStyle("-fx-text-fill: white");
         carteTransport.getChildren().clear();
         for(ICarteTransport ct : courant.getCartesTransport()) {
             if (ct.estWagon()) {
@@ -61,7 +62,9 @@ public class VueJoueurCourant extends VBox {
         }
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
-            carteDestination.getChildren().add(new Label(cd.getVilles().toString()));
+            Label labelCarteDestination = new Label(cd.getVilles().toString());
+            labelCarteDestination.setStyle("-fx-text-fill: white");
+            carteDestination.getChildren().add(labelCarteDestination);
         }
     };
 

@@ -11,11 +11,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 
 import java.util.List;
 
@@ -42,15 +44,17 @@ public class VueDuJeu extends HBox {
         this.jeu = jeu;
         plateau = new VuePlateau();
         passer = new Button("Passer");
+        passer.setStyle("-fx-background-color: #460101; -fx-text-fill: white");
         instruction = new Label();
-        instruction.setStyle("-fx-padding: 0 0 10 0");
+        instruction.setStyle("-fx-padding: 0 0 10 0; -fx-text-fill: white");
         instruction.setWrapText(true);
         destinationsInitiales = new VBox();
+        destinationsInitiales.setStyle("-fx-alignment: center;-fx-padding: 0 0 25 0");
         choixPionsInitiales = new Label();
         vueJoueurCourant = new VueJoueurCourant();
         vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
         Label titre = new Label("Aventuriers du Rail");
-        titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center");
+        titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center; -fx-font-size: 17; -fx-text-fill: white");
         VBox menu = new VBox();
         menu.getChildren().addAll(
                 titre,
@@ -59,6 +63,7 @@ public class VueDuJeu extends HBox {
                 destinationsInitiales,
                 passer);
         menu.setMinWidth(200);
+        menu.setStyle("-fx-border-width: 5; -fx-border-color: linear-gradient(#0014bd, #4d00bd); -fx-padding: 5; -fx-background-color: linear-gradient(#007693, #4d00bd)");
         menu.setAlignment(Pos.TOP_CENTER);
         getChildren().addAll(plateau,menu);
     }
@@ -68,6 +73,7 @@ public class VueDuJeu extends HBox {
             if (change.wasAdded()) {
                 for (IDestination destination : change.getAddedSubList()) {
                     Button buttonDestination = new Button(destination.getVilles().toString());
+                    buttonDestination.setStyle("-fx-text-fill: white;-fx-background-color: #26376a; -fx-alignment: center");
                     buttonDestination.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                         destinationsInitiales.getChildren().remove(buttonDestination);
                         getJeu().uneDestinationAEteChoisie(destination);
