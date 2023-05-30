@@ -6,6 +6,8 @@ import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +15,8 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -63,9 +67,15 @@ public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire app
             ImageView iv = new ImageView("images/cartesWagons/" + carte + ".png");
             iv.setFitHeight(90.625);
             iv.setFitWidth(145.0);
-            Button bct = new Button();
+            Button bct= new Button();
             bct.setGraphic(iv);
             carteTransport.getChildren().add(bct);
+            bct.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    System.out.println("Carte choisie");
+                }
+            });
             sp.setManaged(true);
             sp.setVisible(true);
         }
