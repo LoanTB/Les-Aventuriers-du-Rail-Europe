@@ -20,4 +20,6 @@ public class VueCarteTransport extends Pane {
         return carteTransport;
     }
 
+    public void bindRedimension () {}
+
 }
