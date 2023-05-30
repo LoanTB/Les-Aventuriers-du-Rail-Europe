@@ -26,12 +26,17 @@ public class VueJoueurCourant extends VBox {
     private Label nomJoueur;
     private VBox carteTransport;
     private VBox carteDestination;
+    private ScrollPane sp;
 
     public VueJoueurCourant() {
         nomJoueur = new Label();
         carteTransport = new VBox();
         carteDestination = new VBox();
-        getChildren().addAll(nomJoueur,carteTransport,carteDestination);
+        sp = new ScrollPane();
+        sp.setContent(carteTransport);
+        sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        sp.setPrefViewportHeight(350.0);
+        getChildren().addAll(nomJoueur,sp,carteDestination);
     }
 
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
@@ -54,8 +59,8 @@ public class VueJoueurCourant extends VBox {
                 carte += "-A";
             }
             ImageView iv = new ImageView("images/cartesWagons/" + carte + ".png");
-            iv.setFitHeight(50.0);
-            iv.setFitWidth(80.0);
+            iv.setFitHeight(90.625);
+            iv.setFitWidth(145.0);
             Button bct = new Button();
             bct.setGraphic(iv);
             carteTransport.getChildren().add(bct);
