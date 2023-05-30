@@ -25,27 +25,30 @@ import javafx.scene.layout.VBox;
  *
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
-public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire apparaître et disparaître le scrollPane en utilisant des bindings
+public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire apparaître/disparaître le scrollPane en utilisant des bindings + afficher les avatars des joueurs
 
     private Label nomJoueur;
     private VBox carteTransport;
     private VBox carteDestination;
+//    private ImageView avatar;
     private ScrollPane sp;
 
     public VueJoueurCourant() {
         nomJoueur = new Label();
         carteTransport = new VBox();
         carteDestination = new VBox();
+//        avatar = new ImageView();
         sp = new ScrollPane();
         sp.setContent(carteTransport);
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         sp.setPrefViewportHeight(350.0);
-        getChildren().addAll(nomJoueur,sp,carteDestination);
+        getChildren().addAll(/*avatar,*/nomJoueur,sp,carteDestination);
         sp.setManaged(false);
         sp.setVisible(false);
     }
 
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
+        String couleurAvatar = new String();
         String carte = new String();
         nomJoueur.setText(courant.getNom());
         nomJoueur.setStyle("-fx-text-fill: white");
@@ -64,11 +67,11 @@ public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire app
             if (ct.getAncre()) {
                 carte += "-A";
             }
-            ImageView iv = new ImageView("images/cartesWagons/" + carte + ".png");
-            iv.setFitHeight(90.625);
-            iv.setFitWidth(145.0);
+            ImageView carteT = new ImageView("images/cartesWagons/" + carte + ".png");
+            carteT.setFitHeight(90.625);
+            carteT.setFitWidth(145.0);
             Button bct= new Button();
-            bct.setGraphic(iv);
+            bct.setGraphic(carteT);
             carteTransport.getChildren().add(bct);
             bct.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -85,6 +88,8 @@ public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire app
             labelCarteDestination.setStyle("-fx-text-fill: white");
             carteDestination.getChildren().add(labelCarteDestination);
         }
+//        couleurAvatar = "avatar-" + courant.getCouleur();
+//        avatar.setId("images/cartesWagons/avatar-BLEU.png");
     };
 
     public void creerBindings() {
