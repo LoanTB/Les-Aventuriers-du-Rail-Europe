@@ -7,6 +7,7 @@ import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -78,37 +79,7 @@ public class VueDuJeu extends HBox {
         );
         menuJoueur.setMinWidth(267);
         menuJoueur.setStyle("-fx-padding: 5; background: transparent;");
-        //menuJoueur.setStyle("-fx-padding: 5; -fx-background-color: linear-gradient(#007693, #4d00bd)");
         menuJoueur.setAlignment(Pos.TOP_CENTER);
-
-        /*VBox logs = new VBox();FFFFFFFF
-        Label logTitle = new Label("Logs du jeu :");
-        logTitle.setStyle("-fx-text-fill: white; -fx-font-size: 20");
-        ScrollPane logsBox = new ScrollPane();
-        logs.setStyle("-fx-background-color: linear-gradient(to right, #005063, #4d00bd); -fx-spacing: 2;-fx-padding: 5");
-        logs.setMinHeight(118);
-        logs.setMinWidth(1320);
-        logsBox.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        logsBox.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        logsBox.setContent(logs);
-        logsBox.setPrefViewportHeight(224);
-        logsBox.setPrefViewportWidth(1720);
-        VBox PlateauEtLog = new VBox();
-        PlateauEtLog.getChildren().addAll(
-                plateau,
-                logsBox
-        );
-        logs.getChildren().add(logTitle);
-        String[] Lorem = new String[]{"lorem","ipsum","dolor","sit","amet","consectetur","adipiscing","elit","vitae","blandit","libero","luctus","dapibus","est","nullam","vel","mattis"};
-        for (int i=0;i<20;i++){
-            Label logLoremIpsum = new Label("[INFO] - ");
-            for (int j=0;j<20;j++){
-                logLoremIpsum.setText(logLoremIpsum.getText()+" "+Lorem[(int)(Math.random()*(Lorem.length))]);
-            }
-            logLoremIpsum.setText(logLoremIpsum.getText()+".");
-            logLoremIpsum.setStyle("-fx-text-fill: white");
-            logs.getChildren().add(logLoremIpsum);
-        }PlateauEtLog*/
 
         VBox boxJeu = new VBox();
         menuJeu = new HBox();
@@ -119,16 +90,17 @@ public class VueDuJeu extends HBox {
         getChildren().addAll(boxJeu, menuJoueur);
 
         boutonPileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
-        boutonPileWagon.setFitHeight(150);
-        boutonPileWagon.setFitWidth(93.75);
+        boutonPileWagon.setFitHeight(145);
+        boutonPileWagon.setFitWidth(90.625);
 
         boutonPileBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
-        boutonPileBateau.setFitHeight(150);
-        boutonPileBateau.setFitWidth(93.75);
+        boutonPileBateau.setFitHeight(145);
+        boutonPileBateau.setFitWidth(90.625);
 
         HBox pioches = new HBox();
         pioches.getChildren().addAll(boutonPileWagon, boutonPileBateau);
         pioches.setSpacing(10.0);
+        pioches.setPadding(new Insets(5));
 
         carteVisiblePioche = new HBox();
         carteVisiblePioche.setSpacing(5.0);
@@ -136,7 +108,6 @@ public class VueDuJeu extends HBox {
 
         menuJeu.getChildren().addAll(pioches, carteVisiblePioche);
         menuJeu.setSpacing(50.0);
-        //menuJeu.setStyle("-fx-background-color: linear-gradient(to right,#007693, #4d00bd);");
         menuJoueur.setStyle("background: transparent;");
     }
 

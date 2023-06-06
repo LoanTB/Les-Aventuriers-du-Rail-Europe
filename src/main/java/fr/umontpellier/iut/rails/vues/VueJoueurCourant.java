@@ -22,7 +22,6 @@ import javafx.scene.layout.VBox;
  */
 public class VueJoueurCourant extends VBox {
     // TODO mettre des symboles de wagon, bateau et port et mettre un nombre à côté de chacun indiquant le nombre d'éléments possédés (pions pour les wagons et bateau) (ports posés pour les ports)
-    // TODO Quentin : ScrollPane pas toute la largeur si possible mon reuf
     private Label nomJoueur;
     private VBox carteTransport;
     private VBox carteDestination;
