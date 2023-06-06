@@ -1,8 +1,10 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.mecanique.Joueur;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -202,5 +204,9 @@ public class VueDuJeu extends HBox {
         }
 
     });
+
+//    ChangeListener<ICarteTransport> AfficherCartesPiles = ((observableValue, ancien, courant) -> {
+//        while ()
+//    });
 
 }
