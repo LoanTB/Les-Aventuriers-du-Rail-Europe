@@ -2,6 +2,7 @@ package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
+import fr.umontpellier.iut.rails.mecanique.Joueur;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -128,8 +129,7 @@ public class VueDuJeu extends HBox {
                     }
                 }
                 if (destinationsInitiales.getChildren().size() == 0){
-                    menuJoueur.getChildren().remove(destinationsInitiales);
-                    menuJoueur.getChildren().add(3,choixPionsInitiales);
+                    menuJoueur.getChildren().set(3,choixPionsInitiales);
                 }
             }
         }
@@ -151,7 +151,11 @@ public class VueDuJeu extends HBox {
 
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> {
         if (menuJoueur.getChildren().contains(choixPionsInitiales)){
+            String inst = instruction.getText();
             getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
+            if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
+                menuJoueur.getChildren().set(3,destinationsInitiales);
+            }
         } else { // TODO Loan doit finir ça, pour choisir les pions
             getJeu().passerAEteChoisi();
         }
