@@ -39,6 +39,7 @@ public class VueDuJeu extends HBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
+        setStyle("-fx-background-color: linear-gradient(to right top,#007693, #4d00bd);");
 
         plateau = new VuePlateau();
 
@@ -74,7 +75,8 @@ public class VueDuJeu extends HBox {
                 passer
         );
         menuJoueur.setMinWidth(267);
-        menuJoueur.setStyle("-fx-padding: 5; -fx-background-color: linear-gradient(#007693, #4d00bd)");
+        menuJoueur.setStyle("-fx-padding: 5; background: transparent;");
+        //menuJoueur.setStyle("-fx-padding: 5; -fx-background-color: linear-gradient(#007693, #4d00bd)");
         menuJoueur.setAlignment(Pos.TOP_CENTER);
 
         /*VBox logs = new VBox();FFFFFFFF
@@ -135,7 +137,8 @@ public class VueDuJeu extends HBox {
 
         menuJeu.getChildren().addAll(piles, spc);
         menuJeu.setSpacing(50.0);
-        menuJeu.setStyle("-fx-background-color: linear-gradient(to right,#007693, #4d00bd);");
+        //menuJeu.setStyle("-fx-background-color: linear-gradient(to right,#007693, #4d00bd);");
+        menuJoueur.setStyle("background: transparent;");
     }
 
     final ListChangeListener<IDestination> destinationsInitialesChanges = change -> {
