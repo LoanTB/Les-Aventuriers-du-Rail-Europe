@@ -27,6 +27,7 @@ import javafx.scene.text.Font;
  * ainsi que les listeners à exécuter lorsque ces éléments changent
  */
 public class VueDuJeu extends HBox {
+    // TODO faire la pioche destination
 
     private final IJeu  jeu;
     private VuePlateau plateau;

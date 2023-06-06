@@ -27,6 +27,9 @@ public class VueJoueurCourant extends VBox {
     private VBox carteDestination;
     private ImageView avatar;
     private ScrollPane sp;
+    private HBox infos;
+    private Button nbPionsWagons;
+    private Button nbPionsBateau;
 
     public VueJoueurCourant() {
         nomJoueur = new Label();
@@ -47,7 +50,25 @@ public class VueJoueurCourant extends VBox {
         sp.setManaged(false);
         sp.setVisible(false);
 
-        getChildren().addAll(avatar,nomJoueur,sp,carteDestination);
+        ImageView pionWagon = new ImageView("images/bouton-pions-wagon.png");
+        pionWagon.setFitHeight(25);
+        pionWagon.setFitWidth(25);
+
+        nbPionsWagons = new Button();
+        nbPionsWagons.setGraphic(pionWagon); //mettre l'image dans une HBox avec l'appelle à la fonction du nombre de wagons
+
+        ImageView pionBateau = new ImageView("images/bouton-pions-bateau.png");
+        pionBateau.setFitHeight(25);
+        pionBateau.setFitWidth(25);
+
+        nbPionsBateau = new Button();
+        nbPionsBateau.setGraphic(pionBateau); //mettre l'image dans une HBox avec l'appelle à la fonction du nombre de bateaux
+
+        infos = new HBox();
+        infos.getChildren().addAll(nbPionsWagons, nbPionsBateau);
+        infos.setAlignment(Pos.CENTER);
+
+        getChildren().addAll(avatar,nomJoueur,sp,carteDestination,infos);
         this.setSpacing(10.0);
         this.setAlignment(Pos.CENTER);
     }
