@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -54,10 +55,9 @@ public class VueDuJeu extends HBox {
         destinationsInitiales.setStyle("-fx-alignment: center;-fx-padding: 0 0 25 0;-fx-spacing: 5");
 
         choixPionsInitiales = new TextField();
-        choixPionsInitiales.setMaxWidth(50);
-        choixPionsInitiales.setBorder(Border.EMPTY);
+        choixPionsInitiales.setMaxWidth(40);
         choixPionsInitiales.setFont(new Font(30));
-        choixPionsInitiales.setStyle("-fx-spacing: 5;-fx-padding: 0 0 25 0;");
+        choixPionsInitiales.setStyle("-fx-spacing: 5;-fx-padding: 0 0 0 0;");
 
         vueJoueurCourant = new VueJoueurCourant();
         vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
@@ -168,6 +168,7 @@ public class VueDuJeu extends HBox {
         plateau.prefHeightProperty().bind(getScene().heightProperty());
         jeu.destinationsInitialesProperty().addListener(destinationsInitialesChanges);
         passer.addEventHandler(MouseEvent.MOUSE_CLICKED, actionPasserParDefaut);
+        choixPionsInitiales.setOnKeyPressed(key -> {if (key.getCode() == KeyCode.ENTER) {confirmChoixPionsInitiales();}});
         instruction.textProperty().bind(jeu.instructionProperty());
         vueJoueurCourant.creerBindings();
         plateau.creerBindings();
@@ -177,14 +178,19 @@ public class VueDuJeu extends HBox {
         return jeu;
     }
 
+    private void confirmChoixPionsInitiales(){
+        String inst = instruction.getText();
+        choixPionsInitiales.setText(choixPionsInitiales.getText().substring(choixPionsInitiales.getText().length()-2));
+        getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
+        if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
+            menuJoueur.getChildren().set(3,destinationsInitiales);
+        }
+    }
+
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> {
         if (menuJoueur.getChildren().contains(choixPionsInitiales)){
-            String inst = instruction.getText();
-            getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
-            if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
-                menuJoueur.getChildren().set(3,destinationsInitiales);
-            }
-        } else { // TODO Loan doit finir ça, pour choisir les pions
+            confirmChoixPionsInitiales();
+        } else {
             getJeu().passerAEteChoisi();
         }
 
