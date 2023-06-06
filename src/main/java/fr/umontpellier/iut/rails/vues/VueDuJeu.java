@@ -4,9 +4,7 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
-import fr.umontpellier.iut.rails.mecanique.Joueur;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -14,10 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -31,7 +27,7 @@ import javafx.scene.text.Font;
  */
 public class VueDuJeu extends HBox {
 
-    private final IJeu jeu;
+    private final IJeu  jeu;
     private VuePlateau plateau;
     private Button passer;
     private Label instruction;
@@ -40,6 +36,9 @@ public class VueDuJeu extends HBox {
     private VueJoueurCourant vueJoueurCourant;
     private VBox menuJoueur;
     private HBox menuJeu;
+    private ImageView boutonPileWagon;
+    private ImageView boutonPileBateau;
+    private HBox carteVisiblePioche;
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
@@ -119,26 +118,23 @@ public class VueDuJeu extends HBox {
         );
         getChildren().addAll(boxJeu, menuJoueur);
 
-        ImageView pileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
-        pileWagon.setFitHeight(150);
-        pileWagon.setFitWidth(93.75);
-        Button boutonPileWagon = new Button();
-        boutonPileWagon.setGraphic(pileWagon);
+        boutonPileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
+        boutonPileWagon.setFitHeight(150);
+        boutonPileWagon.setFitWidth(93.75);
 
-        ImageView pileBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
-        pileBateau.setFitHeight(150);
-        pileBateau.setFitWidth(93.75);
-        Button boutonPileBateau = new Button();
-        boutonPileBateau.setGraphic(pileBateau);
+        boutonPileBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
+        boutonPileBateau.setFitHeight(150);
+        boutonPileBateau.setFitWidth(93.75);
 
-        HBox piles = new HBox();
-        piles.getChildren().addAll(boutonPileWagon, boutonPileBateau);
-        piles.setSpacing(10.0);
+        HBox pioches = new HBox();
+        pioches.getChildren().addAll(boutonPileWagon, boutonPileBateau);
+        pioches.setSpacing(10.0);
 
-        ScrollPane spc = new ScrollPane();
-        spc.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        carteVisiblePioche = new HBox();
+        carteVisiblePioche.setSpacing(5.0);
+        carteVisiblePioche.setAlignment(Pos.CENTER);
 
-        menuJeu.getChildren().addAll(piles, spc);
+        menuJeu.getChildren().addAll(pioches, carteVisiblePioche);
         menuJeu.setSpacing(50.0);
         //menuJeu.setStyle("-fx-background-color: linear-gradient(to right,#007693, #4d00bd);");
         menuJoueur.setStyle("background: transparent;");
@@ -203,6 +199,9 @@ public class VueDuJeu extends HBox {
         vueJoueurCourant.creerBindings();
         plateau.creerBindings();
         jeu.joueurCourantProperty().addListener(joueurCourantChange);
+        jeu.cartesTransportVisiblesProperty().addListener(CartesPiles);
+        boutonPileWagon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {jeu.uneCarteWagonAEtePiochee();});
+        boutonPileBateau.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {jeu.uneCarteBateauAEtePiochee();} );
     }
 
     public IJeu getJeu() {
@@ -235,11 +234,20 @@ public class VueDuJeu extends HBox {
         } else {
             getJeu().passerAEteChoisi();
         }
-
     });
 
-//    ChangeListener<ICarteTransport> AfficherCartesPiles = ((observableValue, ancien, courant) -> {
-//        while ()
-//    });
+    ListChangeListener<ICarteTransport> CartesPiles = new ListChangeListener<ICarteTransport>() {
+        @Override
+        public void onChanged(Change<? extends ICarteTransport> change) {
+            carteVisiblePioche.getChildren().clear();
+            for (ICarteTransport cartes : jeu.cartesTransportVisiblesProperty()) {
+                ImageView carte = Utils.loadCarte(cartes, new double[]{78.125, 125});
+                carte.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    jeu.uneCarteTransportAEteChoisie(cartes);
+                });
+                carteVisiblePioche.getChildren().add(carte);
+            }
+        }
+    };
 
 }
