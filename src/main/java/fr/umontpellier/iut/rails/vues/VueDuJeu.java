@@ -4,6 +4,8 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
+import javafx.animation.Animation;
+import javafx.animation.Transition;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -16,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -141,22 +144,39 @@ public class VueDuJeu extends HBox {
         }
     };
 
+    private Animation animationCouleur(String couleur){
+        final Animation animation = new Transition() {
+            {setCycleDuration(Duration.millis(1000));}
+            @Override
+            protected void interpolate(double progress) {
+                setStyle("-fx-background-color: linear-gradient(to right top,#590097 "+(int)(50+(1-progress)*50)+"%, "+couleur+");");
+            }
+        };
+        return animation;
+    }
+
     final ChangeListener<IJoueur> joueurCourantChange = (observable, oldValue, newValue) -> {
+
         switch (newValue.getCouleur()){
             case BLEU -> {
-                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #09008e);");
+                animationCouleur("#00036b").playFromStart();
+                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #00036b);");
             }
             case ROSE -> {
-                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0078);");
+                animationCouleur("#8e0078").playFromStart();
+                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0078);");
             }
             case VERT -> {
-                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #008e06);");
+                animationCouleur("#008e06").playFromStart();
+                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #008e06);");
             }
             case ROUGE -> {
-                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0000);");
+                animationCouleur("#8e0000").playFromStart();
+                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0000);");
             }
             case JAUNE -> {
-                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8c8e00);");
+                animationCouleur("#8c8e00").playFromStart();
+                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8c8e00);");
             }
         }
     };
