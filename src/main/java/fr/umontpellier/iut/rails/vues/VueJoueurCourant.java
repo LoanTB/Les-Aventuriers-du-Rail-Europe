@@ -65,9 +65,9 @@ public class VueJoueurCourant extends VBox { // TODO mettre des symboles de wago
 
         for(int i=0;i<courant.getCartesTransport().size();i+=2) {
             if (i==courant.getCartesTransport().size()-1){
-                carteTransport.getChildren().add(loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}));
+                carteTransport.getChildren().add(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}));
             } else {
-                carteTransport.getChildren().add(new HBox(loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}),loadCarte(courant.getCartesTransport().get(i+1), new double[]{78.125,125})));
+                carteTransport.getChildren().add(new HBox(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}),Utils.loadCarte(courant.getCartesTransport().get(i+1), new double[]{78.125,125})));
             }
             sp.setManaged(true);
             sp.setVisible(true);
@@ -81,27 +81,6 @@ public class VueJoueurCourant extends VBox { // TODO mettre des symboles de wago
         }
 
     };
-
-    public ImageView loadCarte(ICarteTransport carte, double[] taille){
-        String s = "";
-        if (carte.estWagon()) {
-            s = "carte-WAGON-";
-        } else if (carte.estBateau()) {
-            s = "carte-BATEAU-";
-        } else if (carte.estDouble()) {
-            s = "carte-DOUBLE-";
-        } else if (carte.estJoker()) {
-            s = "carte-JOKER-";
-        }
-        s += carte.getStringCouleur();
-        if (carte.getAncre()) {
-            s += "-A";
-        }
-        ImageView img = new ImageView("images/cartesWagons/" + s + ".png");
-        img.setFitHeight(taille[0]);
-        img.setFitWidth(taille[1]);
-        return img;
-    }
 
     public void creerBindings() {
         ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().addListener(JoueurCourantChange);
