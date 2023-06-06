@@ -3,8 +3,10 @@ package fr.umontpellier.iut.rails.vues;
 import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
+import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.Joueur;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -41,7 +43,6 @@ public class VueDuJeu extends HBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
-        setStyle("-fx-background-color: linear-gradient(to right top,#007693, #4d00bd);");
 
         plateau = new VuePlateau();
 
@@ -172,6 +173,26 @@ public class VueDuJeu extends HBox {
         }
     };
 
+    final ChangeListener<IJoueur> joueurCourantChange = (observable, oldValue, newValue) -> {
+        switch (newValue.getCouleur()){
+            case BLEU -> {
+                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #09008e);");
+            }
+            case ROSE -> {
+                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0078);");
+            }
+            case VERT -> {
+                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #008e06);");
+            }
+            case ROUGE -> {
+                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0000);");
+            }
+            case JAUNE -> {
+                setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8c8e00);");
+            }
+        }
+    };
+
     public void creerBindings() {
         plateau.prefWidthProperty().bind(getScene().widthProperty());
         plateau.prefHeightProperty().bind(getScene().heightProperty());
@@ -181,6 +202,7 @@ public class VueDuJeu extends HBox {
         instruction.textProperty().bind(jeu.instructionProperty());
         vueJoueurCourant.creerBindings();
         plateau.creerBindings();
+        jeu.joueurCourantProperty().addListener(joueurCourantChange);
     }
 
     public IJeu getJeu() {
