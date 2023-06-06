@@ -25,7 +25,7 @@ import javafx.scene.layout.VBox;
  *
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
-public class VueJoueurCourant extends VBox { //TODO : Quentin, il faut faire apparaître/disparaître le scrollPane en utilisant des bindings + afficher les avatars des joueurs
+public class VueJoueurCourant extends VBox { // TODO Quentin afficher les avatars
 
     private Label nomJoueur;
     private VBox carteTransport;

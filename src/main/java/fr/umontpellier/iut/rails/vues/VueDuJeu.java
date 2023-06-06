@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -39,23 +40,31 @@ public class VueDuJeu extends HBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
+
         plateau = new VuePlateau();
+
         passer = new Button("Passer");
         passer.setStyle("-fx-background-color: #460101; -fx-text-fill: white");
+
         instruction = new Label();
         instruction.setStyle("-fx-padding: 0 0 10 0; -fx-text-fill: white");
         instruction.setWrapText(true);
+
         destinationsInitiales = new VBox();
         destinationsInitiales.setStyle("-fx-alignment: center;-fx-padding: 0 0 25 0;-fx-spacing: 5");
+
         choixPionsInitiales = new TextField();
         choixPionsInitiales.setMaxWidth(50);
         choixPionsInitiales.setBorder(Border.EMPTY);
         choixPionsInitiales.setFont(new Font(30));
         choixPionsInitiales.setStyle("-fx-spacing: 5;-fx-padding: 0 0 25 0;");
+
         vueJoueurCourant = new VueJoueurCourant();
         vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
+
         Label titre = new Label("Aventuriers du Rail");
         titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center; -fx-font-size: 17; -fx-text-fill: white");
+
         menuJoueur = new VBox();
         //menuJoueur.setStyle("-fx-spacing: 200");
         menuJoueur.getChildren().addAll(
@@ -69,7 +78,8 @@ public class VueDuJeu extends HBox {
         menuJoueur.setMinWidth(200);
         menuJoueur.setStyle("-fx-border-width: 5; -fx-border-color: linear-gradient(#0014bd, #4d00bd); -fx-padding: 5; -fx-background-color: linear-gradient(#007693, #4d00bd)");
         menuJoueur.setAlignment(Pos.TOP_CENTER);
-        /*VBox logs = new VBox();
+
+        /*VBox logs = new VBox();FFFFFFFF
         Label logTitle = new Label("Logs du jeu :");
         logTitle.setStyle("-fx-text-fill: white; -fx-font-size: 20");
         ScrollPane logsBox = new ScrollPane();
@@ -97,6 +107,7 @@ public class VueDuJeu extends HBox {
             logLoremIpsum.setStyle("-fx-text-fill: white");
             logs.getChildren().add(logLoremIpsum);
         }PlateauEtLog*/
+
         VBox boxJeu = new VBox();
         menuJeu = new HBox();
         boxJeu.getChildren().addAll(
@@ -104,6 +115,23 @@ public class VueDuJeu extends HBox {
                 menuJeu
         );
         getChildren().addAll(boxJeu, menuJoueur);
+
+        ImageView pileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
+        pileWagon.setFitHeight(145.0);
+        pileWagon.setFitWidth(90.625);
+        Button boutonPileWagon = new Button();
+        boutonPileWagon.setGraphic(pileWagon);
+
+        ImageView pileBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
+        pileBateau.setFitHeight(145.0);
+        pileBateau.setFitWidth(90.625);
+        Button boutonPileBateau = new Button();
+        boutonPileBateau.setGraphic(pileBateau);
+
+        VBox piles = new VBox();
+        piles.getChildren().addAll(boutonPileWagon, boutonPileBateau);
+
+        menuJeu.getChildren().addAll(piles);
     }
 
     final ListChangeListener<IDestination> destinationsInitialesChanges = change -> {
