@@ -117,21 +117,26 @@ public class VueDuJeu extends HBox {
         getChildren().addAll(boxJeu, menuJoueur);
 
         ImageView pileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
-        pileWagon.setFitHeight(145.0);
-        pileWagon.setFitWidth(90.625);
+        pileWagon.setFitHeight(145.0); //110.0
+        pileWagon.setFitWidth(90.625); //68.75
         Button boutonPileWagon = new Button();
         boutonPileWagon.setGraphic(pileWagon);
 
         ImageView pileBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
-        pileBateau.setFitHeight(145.0);
-        pileBateau.setFitWidth(90.625);
+        pileBateau.setFitHeight(145.0); //110.0
+        pileBateau.setFitWidth(90.625); //68.75
         Button boutonPileBateau = new Button();
         boutonPileBateau.setGraphic(pileBateau);
 
-        VBox piles = new VBox();
+        HBox piles = new HBox();
         piles.getChildren().addAll(boutonPileWagon, boutonPileBateau);
+        piles.setSpacing(10.0);
 
-        menuJeu.getChildren().addAll(piles);
+        ScrollPane spc = new ScrollPane();
+        spc.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+
+        menuJeu.getChildren().addAll(piles, spc);
+        menuJeu.setSpacing(50.0);
     }
 
     final ListChangeListener<IDestination> destinationsInitialesChanges = change -> {
