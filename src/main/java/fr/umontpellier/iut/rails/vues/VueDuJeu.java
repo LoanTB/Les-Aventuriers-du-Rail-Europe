@@ -209,18 +209,29 @@ public class VueDuJeu extends HBox {
         return jeu;
     }
 
-    private void confirmChoixPionsInitiales(){
-        String inst = instruction.getText();
-        choixPionsInitiales.setText(choixPionsInitiales.getText().substring(choixPionsInitiales.getText().length()-2));
-        getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
-        if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
-            menuJoueur.getChildren().set(3,destinationsInitiales);
+    private boolean confirmChoixPionsInitiales(){
+        if (choixPionsInitiales.getText().length() > 0){
+            if (choixPionsInitiales.getText().length() < 2){
+                return true;
+            }
+            String inst = instruction.getText();
+            choixPionsInitiales.setText(choixPionsInitiales.getText().substring(choixPionsInitiales.getText().length()-2));
+            getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
+            if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
+                menuJoueur.getChildren().set(3,destinationsInitiales);
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> {
         if (menuJoueur.getChildren().contains(choixPionsInitiales)){
-            confirmChoixPionsInitiales();
+            if (!confirmChoixPionsInitiales()){
+                menuJoueur.getChildren().set(3,destinationsInitiales);
+                getJeu().passerAEteChoisi();
+            }
         } else {
             getJeu().passerAEteChoisi();
         }
