@@ -47,6 +47,7 @@ public class VueDuJeu extends HBox {
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
+        setStyle("-fx-background-color: linear-gradient(to right top, #590097 100%, #590097);");
 
         plateau = new VuePlateau();
 
@@ -149,7 +150,17 @@ public class VueDuJeu extends HBox {
             {setCycleDuration(Duration.millis(1000));}
             @Override
             protected void interpolate(double progress) {
-                setStyle("-fx-background-color: linear-gradient(to right top,#590097 "+(int)(50+(1-progress)*50)+"%, "+couleur+");");
+                String ancienne;
+                if (getStyle().charAt(66) == '#'){
+                    ancienne = getStyle().substring(65,73);
+                } else {
+                    ancienne = getStyle().substring(64,72);
+                }
+                if (progress < 0.5){
+                    setStyle("-fx-background-color: linear-gradient(to right top, #590097 "+(int)(50-(1-progress*2-1)*50)+"%, "+ancienne+");");
+                } else {
+                    setStyle("-fx-background-color: linear-gradient(to right top, #590097 "+(int)(50+(1-(progress-0.5)*2)*50)+"%, "+couleur+");");
+                }
             }
         };
         return animation;
