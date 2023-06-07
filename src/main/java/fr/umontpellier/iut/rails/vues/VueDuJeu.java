@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -146,20 +147,29 @@ public class VueDuJeu extends HBox {
     };
 
     private Animation animationCouleur(String couleur){
+        String ancienne = Utils.reverseString(Utils.reverseString(getStyle()).substring(2,9));
+
         final Animation animation = new Transition() {
             {setCycleDuration(Duration.millis(1000));}
             @Override
             protected void interpolate(double progress) {
-                String ancienne;
-                if (getStyle().charAt(66) == '#'){
-                    ancienne = getStyle().substring(65,73);
-                } else {
-                    ancienne = getStyle().substring(64,72);
+                String r = Integer.toHexString((int) (Integer.parseInt(ancienne.substring(1, 3), 16) + (Integer.parseInt("59", 16) - Integer.parseInt(ancienne.substring(1,3), 16)) * progress));
+                while (r.length() < 2){
+                    r = "0"+r;
                 }
-                if (progress < 0.5){
-                    setStyle("-fx-background-color: linear-gradient(to right top, #590097 "+(int)(50-(1-progress*2-1)*50)+"%, "+ancienne+");");
+                String g = Integer.toHexString((int)(Integer.parseInt(ancienne.substring(3,5),16)+(Integer.parseInt("00",16)-Integer.parseInt(ancienne.substring(3,5),16))*progress));
+                while (g.length() < 2){
+                    g = "0"+g;
+                }
+                String b = Integer.toHexString((int)(Integer.parseInt(ancienne.substring(5,7),16)+(Integer.parseInt("97",16)-Integer.parseInt(ancienne.substring(5,7),16))*progress));
+                while (b.length() < 2){
+                    b = "0"+b;
+                }
+                String transitionColor = "#"+r+g+b;
+                if (progress == 1){
+                    setStyle("-fx-background-color: linear-gradient(to right top, #590097 "+(int)(50+(1-progress)*50)+"%, "+couleur+");");
                 } else {
-                    setStyle("-fx-background-color: linear-gradient(to right top, #590097 "+(int)(50+(1-(progress-0.5)*2)*50)+"%, "+couleur+");");
+                    setStyle("-fx-background-color: linear-gradient(to right top, #590097 "+(int)(50-(progress)*50)+"%, "+transitionColor+" "+(int)(50+(1-progress)*50)+"%, "+couleur+");");
                 }
             }
         };

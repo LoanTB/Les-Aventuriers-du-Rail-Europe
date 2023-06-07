@@ -24,4 +24,10 @@ public abstract class Utils {
         img.setFitWidth(taille[1]);
         return img;
     }
+
+    public static String reverseString(String s){
+        StringBuilder r = new StringBuilder(s);
+        r.reverse();
+        return r.toString();
+    }
 }
