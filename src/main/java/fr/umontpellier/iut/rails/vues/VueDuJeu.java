@@ -13,11 +13,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -40,11 +40,14 @@ public class VueDuJeu extends HBox {
     private VBox destinationsInitiales;
     private TextField choixPionsInitiales;
     private VueJoueurCourant vueJoueurCourant;
+    private VueAutresJoueurs vueAutresJoueurs;
     private VBox menuJoueur;
+    private VBox infosAutresJoueurs;
     private HBox menuJeu;
     private ImageView boutonPileWagon;
     private ImageView boutonPileBateau;
     private HBox carteVisiblePioche;
+    private VBox menuDesJoueurs;
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
@@ -70,6 +73,8 @@ public class VueDuJeu extends HBox {
         vueJoueurCourant = new VueJoueurCourant();
         vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
 
+        vueAutresJoueurs = new VueAutresJoueurs();
+
         Label titre = new Label("Aventuriers du Rail");
         titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center; -fx-font-size: 17; -fx-text-fill: white");
 
@@ -87,13 +92,20 @@ public class VueDuJeu extends HBox {
         menuJoueur.setStyle("-fx-padding: 5; background: transparent;");
         menuJoueur.setAlignment(Pos.TOP_CENTER);
 
+        infosAutresJoueurs = new VBox();
+        infosAutresJoueurs.getChildren().add(vueAutresJoueurs);
+
+        menuDesJoueurs = new VBox();
+        menuDesJoueurs.getChildren().addAll(menuJoueur, infosAutresJoueurs);
+        menuDesJoueurs.setSpacing(30);
+
         VBox boxJeu = new VBox();
         menuJeu = new HBox();
         boxJeu.getChildren().addAll(
                 plateau,
                 menuJeu
         );
-        getChildren().addAll(boxJeu, menuJoueur);
+        getChildren().addAll(boxJeu,menuDesJoueurs);
 
         boutonPileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
         boutonPileWagon.setFitHeight(145);
@@ -215,6 +227,7 @@ public class VueDuJeu extends HBox {
         jeu.cartesTransportVisiblesProperty().addListener(CartesPiles);
         boutonPileWagon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {jeu.uneCarteWagonAEtePiochee();});
         boutonPileBateau.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {jeu.uneCarteBateauAEtePiochee();} );
+        vueAutresJoueurs.creerBindings();
     }
 
     public IJeu getJeu() {
