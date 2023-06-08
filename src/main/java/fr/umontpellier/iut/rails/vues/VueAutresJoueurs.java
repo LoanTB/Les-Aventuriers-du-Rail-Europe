@@ -31,7 +31,7 @@ public class VueAutresJoueurs extends VBox {
         IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
         this.getChildren().clear();
         for (IJoueur joueur : jeu.getJoueurs()) {
-            if (joueur != jeu.joueurCourantProperty()) {
+            if (!joueur.equals(jeu.joueurCourantProperty())) {
                 ImageView avatarJoueur = new ImageView();
                 String couleurAvatar = "avatar-" + joueur.getCouleur() + ".png";
                 Image portrait = new Image("images/cartesWagons/" + couleurAvatar);
