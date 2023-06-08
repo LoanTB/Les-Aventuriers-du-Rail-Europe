@@ -4,8 +4,7 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
-import javafx.animation.Animation;
-import javafx.animation.Transition;
+import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -13,13 +12,19 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.CubicCurveTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -44,9 +49,9 @@ public class VueDuJeu extends HBox {
     private VBox menuJoueur;
     private VBox infosAutresJoueurs;
     private HBox menuJeu;
-    private ImageView boutonPileWagon;
-    private ImageView boutonPileBateau;
-    private HBox carteVisiblePioche;
+    private StackPane piocheWagon;
+    private StackPane piocheBateau;
+    private HBox cartesVisiblePioche;
     private VBox menuDesJoueurs;
 
     public VueDuJeu(IJeu jeu) {
@@ -107,24 +112,27 @@ public class VueDuJeu extends HBox {
         );
         getChildren().addAll(boxJeu,menuDesJoueurs);
 
-        boutonPileWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
-        boutonPileWagon.setFitHeight(145);
-        boutonPileWagon.setFitWidth(90.625);
+        int nbCartesDansPioche = 3;
+        piocheWagon = new StackPane();
+        piocheBateau = new StackPane();
+        for (int i=0;i<nbCartesDansPioche;i++){
+            piocheWagon.getChildren().add(Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625}));
+            StackPane.setMargin(piocheWagon.getChildren().get(piocheWagon.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
 
-        boutonPileBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
-        boutonPileBateau.setFitHeight(145);
-        boutonPileBateau.setFitWidth(90.625);
+            piocheBateau.getChildren().add(Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625}));
+            StackPane.setMargin(piocheBateau.getChildren().get(piocheBateau.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
+        }
 
         HBox pioches = new HBox();
-        pioches.getChildren().addAll(boutonPileWagon, boutonPileBateau);
-        pioches.setSpacing(10.0);
-        pioches.setPadding(new Insets(5));
+        pioches.getChildren().addAll(piocheWagon, piocheBateau);
+        pioches.setSpacing(10);
+        pioches.setPadding(new Insets(5,10,5,10));
 
-        carteVisiblePioche = new HBox();
-        carteVisiblePioche.setSpacing(5.0);
-        carteVisiblePioche.setAlignment(Pos.CENTER);
+        cartesVisiblePioche = new HBox();
+        cartesVisiblePioche.setSpacing(5.0);
+        cartesVisiblePioche.setAlignment(Pos.CENTER);
 
-        menuJeu.getChildren().addAll(pioches, carteVisiblePioche);
+        menuJeu.getChildren().addAll(pioches, cartesVisiblePioche);
         menuJeu.setSpacing(50.0);
         menuJoueur.setStyle("background: transparent;");
     }
@@ -225,10 +233,118 @@ public class VueDuJeu extends HBox {
         plateau.creerBindings();
         jeu.joueurCourantProperty().addListener(joueurCourantChange);
         jeu.cartesTransportVisiblesProperty().addListener(CartesPiles);
-        boutonPileWagon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {jeu.uneCarteWagonAEtePiochee();});
-        boutonPileBateau.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {jeu.uneCarteBateauAEtePiochee();} );
+        piocheWagon.addEventHandler(MouseEvent.MOUSE_CLICKED,piocherWagon);
+        piocheBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,piocherBateau);
         vueAutresJoueurs.creerBindings();
     }
+
+    EventHandler<? super MouseEvent> piocherBateau = (mouseEvent -> {
+        IJoueur ancienJ = getJeu().joueurCourantProperty().get();
+        ArrayList<ICarteTransport> ancienC = new ArrayList<>();
+        ancienC.addAll(getJeu().cartesTransportVisiblesProperty());
+        ancienC.addAll(getJeu().joueurCourantProperty().get().getCartesTransport());
+        getJeu().uneCarteBateauAEtePiochee();
+        ArrayList<ICarteTransport> nouveauC = new ArrayList<>();
+        nouveauC.addAll(getJeu().cartesTransportVisiblesProperty());
+        nouveauC.addAll(ancienJ.getCartesTransport());
+        nouveauC.removeAll(ancienC);
+        ParallelTransition parallelTransition = new ParallelTransition();
+        for (ICarteTransport carte : nouveauC) {
+            ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
+            img.setRotate(-90);
+            ImageView pio = Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625});
+            piocheBateau.getChildren().add(img);
+            piocheBateau.getChildren().add(pio);
+
+            TranslateTransition translateTransitionP = new TranslateTransition(Duration.millis(1000),pio);
+            translateTransitionP.setFromY(0);
+            translateTransitionP.setToY(-300);
+            TranslateTransition translateTransitionI = new TranslateTransition(Duration.millis(1000),img);
+            translateTransitionI.setFromY(0);
+            translateTransitionI.setToY(-300);
+            ParallelTransition parallelTransitionT = new ParallelTransition();
+            parallelTransitionT.getChildren().addAll(/*fadeTransitionP,fadeTransitionI,*/translateTransitionP,translateTransitionI);
+
+            ScaleTransition scaleTransition0P = new ScaleTransition(Duration.millis(250), pio);
+            scaleTransition0P.setFromX(1);
+            scaleTransition0P.setToX(0);
+            ScaleTransition scaleTransition0I = new ScaleTransition(Duration.millis(250), img);
+            scaleTransition0I.setFromY(1);
+            scaleTransition0I.setToY(0);
+            ParallelTransition parallelTransition0 = new ParallelTransition();
+            parallelTransition0.getChildren().addAll(scaleTransition0P,scaleTransition0I);
+
+            ScaleTransition scaleTransition1I = new ScaleTransition(Duration.millis(500), img);
+            scaleTransition1I.setFromY(0);
+            scaleTransition1I.setToY(1);
+            ParallelTransition parallelTransition1 = new ParallelTransition();
+            parallelTransition1.getChildren().addAll(scaleTransition1I);
+
+            FadeTransition fadeTransitionI = new FadeTransition(Duration.millis(250),img);
+            fadeTransitionI.setFromValue(1);
+            fadeTransitionI.setToValue(0);
+
+            SequentialTransition sequentialTransition = new SequentialTransition (parallelTransition0,parallelTransition1,fadeTransitionI);
+            sequentialTransition.play();
+
+            parallelTransition.getChildren().addAll(sequentialTransition,parallelTransitionT);
+        }
+        parallelTransition.play();
+    });
+
+    EventHandler<? super MouseEvent> piocherWagon = (mouseEvent -> {
+        IJoueur ancienJ = getJeu().joueurCourantProperty().get();
+        ArrayList<ICarteTransport> ancienC = new ArrayList<>();
+        ancienC.addAll(getJeu().cartesTransportVisiblesProperty());
+        ancienC.addAll(getJeu().joueurCourantProperty().get().getCartesTransport());
+        getJeu().uneCarteWagonAEtePiochee();
+        ArrayList<ICarteTransport> nouveauC = new ArrayList<>();
+        nouveauC.addAll(getJeu().cartesTransportVisiblesProperty());
+        nouveauC.addAll(ancienJ.getCartesTransport());
+        nouveauC.removeAll(ancienC);
+        ParallelTransition parallelTransition = new ParallelTransition();
+        for (ICarteTransport carte : nouveauC) {
+            ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
+            img.setRotate(-90);
+            ImageView pio = Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625});
+            piocheWagon.getChildren().add(img);
+            piocheWagon.getChildren().add(pio);
+
+            TranslateTransition translateTransitionP = new TranslateTransition(Duration.millis(1000),pio);
+            translateTransitionP.setFromY(0);
+            translateTransitionP.setToY(-300);
+            TranslateTransition translateTransitionI = new TranslateTransition(Duration.millis(1000),img);
+            translateTransitionI.setFromY(0);
+            translateTransitionI.setToY(-300);
+            ParallelTransition parallelTransitionT = new ParallelTransition();
+            parallelTransitionT.getChildren().addAll(/*fadeTransitionP,fadeTransitionI,*/translateTransitionP,translateTransitionI);
+
+            ScaleTransition scaleTransition0P = new ScaleTransition(Duration.millis(250), pio);
+            scaleTransition0P.setFromX(1);
+            scaleTransition0P.setToX(0);
+            ScaleTransition scaleTransition0I = new ScaleTransition(Duration.millis(250), img);
+            scaleTransition0I.setFromY(1);
+            scaleTransition0I.setToY(0);
+            ParallelTransition parallelTransition0 = new ParallelTransition();
+            parallelTransition0.getChildren().addAll(scaleTransition0P,scaleTransition0I);
+
+            ScaleTransition scaleTransition1I = new ScaleTransition(Duration.millis(500), img);
+            scaleTransition1I.setFromY(0);
+            scaleTransition1I.setToY(1);
+            ParallelTransition parallelTransition1 = new ParallelTransition();
+            parallelTransition1.getChildren().addAll(scaleTransition1I);
+
+            FadeTransition fadeTransitionI = new FadeTransition(Duration.millis(250),img);
+            fadeTransitionI.setFromValue(1);
+            fadeTransitionI.setToValue(0);
+
+            SequentialTransition sequentialTransition = new SequentialTransition (parallelTransition0,parallelTransition1,fadeTransitionI);
+            sequentialTransition.play();
+
+            parallelTransition.getChildren().addAll(sequentialTransition,parallelTransitionT);
+        }
+        parallelTransition.play();
+    });
 
     public IJeu getJeu() {
         return jeu;
@@ -262,16 +378,82 @@ public class VueDuJeu extends HBox {
         }
     });
 
+//    private void resetCartesVisibles(){
+//        cartesVisiblePioche.getChildren().clear();
+//        cartesVisibleImages.clear();
+//        for (ICarteTransport carte : jeu.cartesTransportVisiblesProperty()) {
+//            ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
+//            cartesVisibleImages.put(carte,img);
+//            img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+//                jeu.uneCarteTransportAEteChoisie(carte);
+//            });
+//            cartesVisiblePioche.getChildren().add(img);
+//        }
+//    }
+
+    private final Map<ICarteTransport,ImageView> cartesVisibleImages = new HashMap<>();
+
     ListChangeListener<ICarteTransport> CartesPiles = new ListChangeListener<ICarteTransport>() {
         @Override
         public void onChanged(Change<? extends ICarteTransport> change) {
-            carteVisiblePioche.getChildren().clear();
-            for (ICarteTransport cartes : jeu.cartesTransportVisiblesProperty()) {
-                ImageView carte = Utils.loadCarte(cartes, new double[]{78.125, 125});
-                carte.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    jeu.uneCarteTransportAEteChoisie(cartes);
-                });
-                carteVisiblePioche.getChildren().add(carte);
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    cartesVisiblePioche.getChildren().clear();
+                    cartesVisibleImages.clear();
+                    for (ICarteTransport carte : jeu.cartesTransportVisiblesProperty()) {
+                        if (!change.getAddedSubList().contains(carte)){
+                            ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
+                            cartesVisibleImages.put(carte,img);
+                            img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                                jeu.uneCarteTransportAEteChoisie(carte);
+                            });
+                            cartesVisiblePioche.getChildren().add(img);
+                        }
+                    }
+                    ParallelTransition parallelTransition = new ParallelTransition();
+                    for (ICarteTransport carte : change.getAddedSubList()) {
+                        ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
+                        cartesVisibleImages.put(carte,img);
+                        img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            jeu.uneCarteTransportAEteChoisie(carte);
+                        });
+                        cartesVisiblePioche.getChildren().add(img);
+                        FadeTransition ft = new FadeTransition(Duration.millis(500),img);
+                        ft.setFromValue(0);
+                        ft.setToValue(1);
+                        TranslateTransition tt = new TranslateTransition(Duration.millis(500),img);
+                        tt.setFromY(-300);
+                        tt.setToY(0);
+                        parallelTransition.getChildren().addAll(ft,tt);
+                    }
+                    parallelTransition.play();
+                } else if (change.wasRemoved()) {
+                    for (ICarteTransport carte : change.getRemoved()){
+                        RotateTransition rotateTransition =
+                                new RotateTransition(Duration.millis(200), cartesVisibleImages.get(carte));
+                        rotateTransition.setByAngle(-90);
+                        FadeTransition fadeTransition =
+                                new FadeTransition(Duration.millis(1000), cartesVisibleImages.get(carte));
+                        fadeTransition.setFromValue(1.0f);
+                        fadeTransition.setToValue(0.0f);
+                        Path path = new Path();
+                        path.getElements().add(new MoveTo(cartesVisibleImages.get(carte).getFitHeight()*.75,cartesVisibleImages.get(carte).getFitWidth()/2*0.65));
+                        path.getElements().add(new CubicCurveTo(100, -300, 200, -200, 400, -300));
+                        PathTransition pathTransition = new PathTransition();
+                        pathTransition.setDuration(Duration.millis(1000));
+                        pathTransition.setPath(path);
+                        pathTransition.setNode(cartesVisibleImages.get(carte));
+                        pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+                        ParallelTransition parallelTransition = new ParallelTransition();
+                        parallelTransition.getChildren().addAll(
+                                fadeTransition,
+                                pathTransition
+                        );
+                        SequentialTransition sequentialTransition = new SequentialTransition (rotateTransition,parallelTransition);
+                        sequentialTransition.play();
+                    }
+
+                }
             }
         }
     };

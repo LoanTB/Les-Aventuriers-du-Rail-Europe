@@ -121,7 +121,7 @@ public class VueJoueurCourant extends VBox {
             labelCarteDestination.setStyle("-fx-text-fill: black");
             carteDestination.getChildren().add(labelCarteDestination);
         }
-        spCarteDestination.setManaged(true);
+        spCarteDestination.setManaged(true); // TODO : Affichier quand les carte destination du joueur augmente (Et non quand le joueur courant change)
         spCarteDestination.setVisible(true);
     };
 

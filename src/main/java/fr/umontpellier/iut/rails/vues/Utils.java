@@ -19,7 +19,11 @@ public abstract class Utils {
         if (carte.getAncre()) {
             s += "-A";
         }
-        ImageView img = new ImageView("images/cartesWagons/" + s + ".png");
+        return loadImage("images/cartesWagons/" + s + ".png",taille);
+    }
+
+    public static ImageView loadImage(String path, double[] taille){
+        ImageView img = new ImageView(path);
         img.setFitHeight(taille[0]);
         img.setFitWidth(taille[1]);
         return img;
