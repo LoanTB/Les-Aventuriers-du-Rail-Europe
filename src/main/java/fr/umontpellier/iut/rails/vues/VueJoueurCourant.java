@@ -1,12 +1,9 @@
 package fr.umontpellier.iut.rails.vues;
 
-import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,9 +22,10 @@ public class VueJoueurCourant extends VBox {
     // TODO mettre des symboles de port et mettre un nombre à côté indiquant le nombre d'éléments possédés (ports posés pour les ports)
     private Label nomJoueur;
     private VBox carteTransport;
+    private ScrollPane spCarteDestination;
     private VBox carteDestination;
     private ImageView avatar;
-    private ScrollPane sp;
+    private ScrollPane spCarteTransport;
     private HBox infos;
     private Button nbPionsWagons;
     private Button nbPionsBateau;
@@ -43,17 +41,22 @@ public class VueJoueurCourant extends VBox {
         carteTransport.setStyle("-fx-alignment: center");
 
         carteDestination = new VBox();
+        spCarteDestination = new ScrollPane();
+        spCarteDestination.setContent(carteDestination);
+        spCarteDestination.setPrefViewportHeight(50.0);
+        spCarteDestination.setManaged(false);
+        spCarteDestination.setVisible(false);
 
         avatar = new ImageView();
         avatar.setFitHeight(120.0);
         avatar.setFitWidth(94.86);
 
-        sp = new ScrollPane();
-        sp.setContent(carteTransport);
-        sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        sp.setPrefViewportHeight(350.0);
-        sp.setManaged(false);
-        sp.setVisible(false);
+        spCarteTransport = new ScrollPane();
+        spCarteTransport.setContent(carteTransport);
+        spCarteTransport.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        spCarteTransport.setPrefViewportHeight(150.0);
+        spCarteTransport.setManaged(false);
+        spCarteTransport.setVisible(false);
 
         ImageView pionWagon = new ImageView("images/bouton-pions-wagon.png");
         pionWagon.setFitHeight(25);
@@ -81,7 +84,7 @@ public class VueJoueurCourant extends VBox {
         infos.getChildren().addAll(nbPionsWagons, nbPionsBateau);
         infos.setAlignment(Pos.CENTER);
 
-        getChildren().addAll(avatar,nomJoueur,sp,carteDestination,infos);
+        getChildren().addAll(avatar,nomJoueur, spCarteTransport, spCarteDestination,infos);
         this.setSpacing(10.0);
         this.setAlignment(Pos.CENTER);
     }
@@ -108,17 +111,18 @@ public class VueJoueurCourant extends VBox {
             } else {
                 carteTransport.getChildren().add(new HBox(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}),Utils.loadCarte(courant.getCartesTransport().get(i+1), new double[]{78.125,125})));
             }
-            sp.setManaged(true);
-            sp.setVisible(true);
+            spCarteTransport.setManaged(true);
+            spCarteTransport.setVisible(true);
         }
 
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
             Label labelCarteDestination = new Label(cd.getVilles().toString());
-            labelCarteDestination.setStyle("-fx-text-fill: white");
+            labelCarteDestination.setStyle("-fx-text-fill: black");
             carteDestination.getChildren().add(labelCarteDestination);
         }
-
+        spCarteDestination.setManaged(true);
+        spCarteDestination.setVisible(true);
     };
 
     public void creerBindings() {
