@@ -3,6 +3,7 @@ package fr.umontpellier.iut.rails.vues;
 import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJoueur;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,7 +22,7 @@ import javafx.scene.layout.VBox;
  * On y définit les bindings sur le joueur courant, ainsi que le listener à exécuter lorsque ce joueur change
  */
 public class VueJoueurCourant extends VBox {
-    // TODO mettre des symboles de wagon, bateau et port et mettre un nombre à côté de chacun indiquant le nombre d'éléments possédés (pions pour les wagons et bateau) (ports posés pour les ports)
+    // TODO mettre des symboles de port et mettre un nombre à côté indiquant le nombre d'éléments possédés (ports posés pour les ports)
     private Label nomJoueur;
     private VBox carteTransport;
     private VBox carteDestination;
@@ -30,6 +31,10 @@ public class VueJoueurCourant extends VBox {
     private HBox infos;
     private Button nbPionsWagons;
     private Button nbPionsBateau;
+    private Label nbPionsW;
+    private Label nbPionsB;
+    private HBox hbPionWagon;
+    private HBox hbPionBateau;
 
     public VueJoueurCourant() {
         nomJoueur = new Label();
@@ -53,16 +58,24 @@ public class VueJoueurCourant extends VBox {
         ImageView pionWagon = new ImageView("images/bouton-pions-wagon.png");
         pionWagon.setFitHeight(25);
         pionWagon.setFitWidth(25);
-
+        nbPionsW = new Label("");
+        hbPionWagon = new HBox();
+        hbPionWagon.getChildren().addAll(pionWagon,nbPionsW);
+        hbPionWagon.setSpacing(2.5);
+        hbPionWagon.setAlignment(Pos.CENTER);
         nbPionsWagons = new Button();
-        nbPionsWagons.setGraphic(pionWagon); //mettre l'image dans une HBox avec l'appelle à la fonction du nombre de wagons
+        nbPionsWagons.setGraphic(hbPionWagon);
 
         ImageView pionBateau = new ImageView("images/bouton-pions-bateau.png");
         pionBateau.setFitHeight(25);
         pionBateau.setFitWidth(25);
-
+        nbPionsB = new Label("");
+        hbPionBateau = new HBox();
+        hbPionBateau.getChildren().addAll(pionBateau,nbPionsB);
+        hbPionBateau.setSpacing(2.5);
+        hbPionBateau.setAlignment(Pos.CENTER);
         nbPionsBateau = new Button();
-        nbPionsBateau.setGraphic(pionBateau); //mettre l'image dans une HBox avec l'appelle à la fonction du nombre de bateaux
+        nbPionsBateau.setGraphic(hbPionBateau);
 
         infos = new HBox();
         infos.getChildren().addAll(nbPionsWagons, nbPionsBateau);
@@ -74,6 +87,11 @@ public class VueJoueurCourant extends VBox {
     }
 
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
+        IntegerProperty nbPW = courant.nbPionsWagonsProperty();
+        IntegerProperty nbPB = courant.nbPionsBateauxProperty();
+        nbPionsW.setText("" + nbPW.getValue());
+        nbPionsB.setText("" + nbPB.getValue());
+
         String couleurAvatar = "avatar-" + courant.getCouleur() + ".png";
         Image portrait = new Image("images/cartesWagons/" + couleurAvatar);
         avatar.setImage(portrait);
