@@ -1,6 +1,7 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IDestination;
+import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -137,8 +139,14 @@ public class VueJoueurCourant extends VBox {
 
     };
 
+    private IJeu getJeu(){
+        return ((VueDuJeu) getScene().getRoot()).getJeu();
+    }
+
     public void creerBindings() {
-        ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().addListener(JoueurCourantChange);
+        getJeu().joueurCourantProperty().addListener(JoueurCourantChange);
+        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsWagonsDemandes();});
+        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsBateauxDemandes();});
     }
 
 }
