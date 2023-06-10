@@ -120,9 +120,10 @@ public class VueJoueurCourant extends VBox {
             Label labelCarteDestination = new Label(cd.getVilles().toString());
             labelCarteDestination.setStyle("-fx-text-fill: black");
             carteDestination.getChildren().add(labelCarteDestination);
+            spCarteDestination.setManaged(true);
+            spCarteDestination.setVisible(true);
         }
-        spCarteDestination.setManaged(true); // TODO : Affichier quand les carte destination du joueur augmente (Et non quand le joueur courant change)
-        spCarteDestination.setVisible(true);
+
     };
 
     public void creerBindings() {
