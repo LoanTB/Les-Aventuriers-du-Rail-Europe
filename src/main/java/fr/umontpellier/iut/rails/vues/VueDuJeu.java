@@ -230,6 +230,13 @@ public class VueDuJeu extends HBox {
         passer.addEventHandler(MouseEvent.MOUSE_CLICKED, actionPasserParDefaut);
         choixPionsInitiales.setOnKeyPressed(key -> {if (key.getCode() == KeyCode.ENTER) {confirmChoixPionsInitiales();}});
         instruction.textProperty().bind(jeu.instructionProperty());
+        instruction.textProperty().addListener(event -> {
+            System.out.println("{");
+            for (Node n: menuJoueur.getChildren()){
+                System.out.println(n.toString());
+            }
+            System.out.println("}");
+        });
         vueJoueurCourant.creerBindings();
         plateau.creerBindings();
         jeu.joueurCourantProperty().addListener(joueurCourantChange);
@@ -319,7 +326,7 @@ public class VueDuJeu extends HBox {
             String inst = instruction.getText();
             choixPionsInitiales.setText(choixPionsInitiales.getText().substring(choixPionsInitiales.getText().length()-2));
             getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
-            if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
+            if (!inst.equals(instruction.getText()) && !instruction.getText().contains("Début")){// Si l'instruction à changer (Donc je jeu a accepté l'input)
                 menuJoueur.getChildren().set(3,destinationsInitiales);
             }
             return true;
@@ -331,8 +338,12 @@ public class VueDuJeu extends HBox {
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> {
         if (menuJoueur.getChildren().contains(choixPionsInitiales)){
             if (!confirmChoixPionsInitiales()){
-                menuJoueur.getChildren().set(3,destinationsInitiales);
                 getJeu().passerAEteChoisi();
+                if (instruction.getText().contains("Début")) {
+                    menuJoueur.getChildren().remove(3);
+                } else {
+                    menuJoueur.getChildren().set(3,destinationsInitiales);
+                }
             }
         } else {
             getJeu().passerAEteChoisi();
