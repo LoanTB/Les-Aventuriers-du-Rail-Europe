@@ -64,7 +64,7 @@ public class VueDuJeu extends HBox {
         passer.setStyle("-fx-background-color: #460101; -fx-text-fill: white");
 
         instruction = new Label();
-        instruction.setStyle("-fx-padding: 0 0 10 0; -fx-text-fill: white");
+        instruction.setStyle("-fx-padding: 0 0 10 0; -fx-text-fill: white; -fx-font-size: 15");
         instruction.setWrapText(true);
 
         destinationsInitiales = new VBox();
@@ -87,8 +87,8 @@ public class VueDuJeu extends HBox {
         //menuJoueur.setStyle("-fx-spacing: 200");
         menuJoueur.getChildren().addAll(
                 titre,
-                vueJoueurCourant,
                 instruction,
+                vueJoueurCourant,
                 //choixPionsInitiales,
                 destinationsInitiales,
                 passer

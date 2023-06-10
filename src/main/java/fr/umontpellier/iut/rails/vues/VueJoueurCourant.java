@@ -88,7 +88,7 @@ public class VueJoueurCourant extends VBox {
         infos.getChildren().addAll(nbPionsWagons, nbPionsBateau);
         infos.setAlignment(Pos.CENTER);
 
-        getChildren().addAll(avatar,nomJoueur, spCarteTransport, spCarteDestination,infos);
+        getChildren().addAll(avatar,nomJoueur, infos, spCarteTransport, spCarteDestination);
         this.setSpacing(10.0);
         this.setAlignment(Pos.CENTER);
     }
