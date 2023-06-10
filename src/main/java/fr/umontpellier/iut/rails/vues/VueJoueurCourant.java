@@ -1,5 +1,6 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
@@ -110,6 +111,8 @@ public class VueJoueurCourant extends VBox {
     }
 
     ChangeListener<IJoueur> JoueurCourantChange = (observableValue, ancien, courant) -> {
+        IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
+
         IntegerProperty nbPW = courant.nbPionsWagonsProperty();
         IntegerProperty nbPB = courant.nbPionsBateauxProperty();
         nbPionsW.setText("" + nbPW.getValue());
@@ -125,15 +128,28 @@ public class VueJoueurCourant extends VBox {
         nomJoueur.setStyle("-fx-text-fill: white");
         carteTransport.getChildren().clear();
 
-        for(int i=0;i<courant.getCartesTransport().size();i+=2) {
-            if (i==courant.getCartesTransport().size()-1){
-                carteTransport.getChildren().add(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}));
-            } else {
-                carteTransport.getChildren().add(new HBox(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}),Utils.loadCarte(courant.getCartesTransport().get(i+1), new double[]{78.125,125})));
-            }
+        for (ICarteTransport cartes : courant.getCartesTransport()) {
+            ImageView img = Utils.loadCarte(cartes, new double[]{78.125,125});
+                img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    jeu.uneCarteDuJoueurEstJouee(cartes);
+                });
+                carteTransport.getChildren().add(img);
             spCarteTransport.setManaged(true);
             spCarteTransport.setVisible(true);
         }
+//        for(int i=0;i<courant.getCartesTransport().size();i+=2) {
+//            if (i==courant.getCartesTransport().size()-1){
+//                ImageView img = Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125});
+//                img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+//                    //getJeu().uneCarteDuJoueurEstJouee(img);
+//                });
+//                carteTransport.getChildren().add(img);
+//            } else {
+//                carteTransport.getChildren().add(new HBox(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}),Utils.loadCarte(courant.getCartesTransport().get(i+1), new double[]{78.125,125})));
+//            }
+//            spCarteTransport.setManaged(true);
+//            spCarteTransport.setVisible(true);
+//        }
 
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){

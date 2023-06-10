@@ -1,14 +1,21 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IJeu;
+import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IRoute;
+import fr.umontpellier.iut.rails.mecanique.Route;
+import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
@@ -27,6 +34,10 @@ public class VuePlateau extends Pane {
 
     @FXML
     private ImageView mapMonde;
+    private ImageView pionWagon;
+    private ImageView pionGare;
+    private Rectangle rectangleSegment;
+    private Circle cerclePort;
 
     public VuePlateau() {
         try {
@@ -38,14 +49,41 @@ public class VuePlateau extends Pane {
             e.printStackTrace();
         }
         setMinSize(Screen.getPrimary().getBounds().getWidth()/3, Screen.getPrimary().getBounds().getHeight()/3);
+
+        pionWagon = new ImageView();
+        pionWagon.setFitHeight(160);
+        pionWagon.setFitWidth(160);
+
+        pionGare = new ImageView();
+        pionGare.setFitHeight(206);
+        pionGare.setFitWidth(268);
     }
 
     EventHandler<MouseEvent> choixRoute = event -> {
-        System.out.println("On a cliqué sur une route");
+        IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
 
+        //Image imageW = new Image("images/wagons/image-wagon-" + routeC.proprietaireProperty().get().getCouleur() + ".png");
+
+        Rectangle route = (Rectangle) event.getSource();
+        jeu.uneRouteAEteChoisie(route.getId());
+
+        //route.setFill(new ImagePattern(imageW));
+
+//        for (IRoute routes : jeu.getRoutes()) {
+//            if (routes.proprietaireProperty().bind()) {
+//
+//            }
+//        }
+
+        System.out.println("On a cliqué sur une route");
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
+        IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
+
+        Circle port = (Circle) event.getSource();
+        jeu.unPortAEteChoisi(port.getId());
+
         System.out.println("On a cliqué sur un port");
     };
 
@@ -59,7 +97,7 @@ public class VuePlateau extends Pane {
     private void ajouterPorts() {
         for (String nomPort : DonneesGraphiques.ports.keySet()) {
             DonneesGraphiques.DonneesCerclesPorts positionPortSurPlateau = DonneesGraphiques.ports.get(nomPort);
-            Circle cerclePort = new Circle(positionPortSurPlateau.centreX(), positionPortSurPlateau.centreY(), DonneesGraphiques.rayonInitial);
+            cerclePort = new Circle(positionPortSurPlateau.centreX(), positionPortSurPlateau.centreY(), DonneesGraphiques.rayonInitial);
             cerclePort.setId(nomPort);
             getChildren().add(cerclePort);
             bindCerclePortAuPlateau(positionPortSurPlateau, cerclePort);
@@ -73,12 +111,13 @@ public class VuePlateau extends Pane {
             ArrayList<DonneesGraphiques.DonneesSegments> segmentsRoute = DonneesGraphiques.routes.get(nomRoute);
             IRoute route = listeRoutes.stream().filter(r -> r.getNom().equals(nomRoute)).findAny().orElse(null);
             for (DonneesGraphiques.DonneesSegments unSegment : segmentsRoute) {
-                Rectangle rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
+                rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
                 rectangleSegment.setId(nomRoute);
                 rectangleSegment.setRotate(unSegment.getAngle());
                 getChildren().add(rectangleSegment);
                 rectangleSegment.setOnMouseClicked(choixRoute);
                 bindRectangle(rectangleSegment, unSegment.getXHautGauche(), unSegment.getYHautGauche());
+
             }
         }
     }
