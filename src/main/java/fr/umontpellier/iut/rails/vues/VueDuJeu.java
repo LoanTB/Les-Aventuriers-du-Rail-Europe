@@ -50,8 +50,11 @@ public class VueDuJeu extends HBox {
     private HBox menuJeu;
     private StackPane piocheWagon;
     private StackPane piocheBateau;
+    private StackPane piocheDestination;
     private HBox cartesVisiblePioche;
     private VBox menuDesJoueurs;
+    private VBox cartesVisiblesEtDestination;
+    private HBox cartesDestination;
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
@@ -113,16 +116,20 @@ public class VueDuJeu extends HBox {
         int nbCartesDansPioche = 3;
         piocheWagon = new StackPane();
         piocheBateau = new StackPane();
+        piocheDestination = new StackPane();
         for (int i=0;i<nbCartesDansPioche;i++){
             piocheWagon.getChildren().add(Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625}));
             StackPane.setMargin(piocheWagon.getChildren().get(piocheWagon.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
 
             piocheBateau.getChildren().add(Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625}));
             StackPane.setMargin(piocheBateau.getChildren().get(piocheBateau.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
+
+            piocheDestination.getChildren().add(Utils.loadImage("images/cartesWagons/destinations.png", new double[]{90.625,145}));
+            StackPane.setMargin(piocheDestination.getChildren().get(piocheDestination.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
         }
 
         HBox pioches = new HBox();
-        pioches.getChildren().addAll(piocheWagon, piocheBateau);
+        pioches.getChildren().addAll(piocheWagon, piocheBateau, piocheDestination);
         pioches.setSpacing(10);
         pioches.setPadding(new Insets(5,10,5,10));
 
@@ -130,7 +137,12 @@ public class VueDuJeu extends HBox {
         cartesVisiblePioche.setSpacing(5.0);
         cartesVisiblePioche.setAlignment(Pos.CENTER);
 
-        menuJeu.getChildren().addAll(pioches, cartesVisiblePioche);
+        cartesDestination = new HBox();
+
+        cartesVisiblesEtDestination = new VBox();
+        cartesVisiblesEtDestination.getChildren().addAll(cartesDestination,cartesVisiblePioche);
+
+        menuJeu.getChildren().addAll(pioches, cartesVisiblesEtDestination);
         menuJeu.setSpacing(50.0);
         menuJoueur.setStyle("background: transparent;");
     }
