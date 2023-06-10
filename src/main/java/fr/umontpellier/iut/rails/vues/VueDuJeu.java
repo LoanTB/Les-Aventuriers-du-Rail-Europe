@@ -37,7 +37,6 @@ import java.util.Map;
  */
 public class VueDuJeu extends HBox {
     // TODO faire la pioche destination
-
     private final IJeu  jeu;
     private VuePlateau plateau;
     private Button passer;
@@ -64,12 +63,12 @@ public class VueDuJeu extends HBox {
         passer.setStyle("-fx-background-color: #460101; -fx-text-fill: white");
 
         instruction = new Label();
-        instruction.setStyle("-fx-text-fill: white; -fx-font-size: 15");//-fx-padding: 0 0 10 0;
+        instruction.setStyle("-fx-text-fill: white; -fx-font-size: 15");
         instruction.setWrapText(true);
         instruction.setPrefWidth(200);
 
         destinationsInitiales = new VBox();
-        destinationsInitiales.setStyle("-fx-alignment: center;-fx-spacing: 5");//-fx-padding: 0 0 25 0;
+        destinationsInitiales.setStyle("-fx-alignment: center;-fx-spacing: 5");
 
         choixPionsInitiales = new TextField();
         choixPionsInitiales.setMaxWidth(50);
@@ -77,7 +76,6 @@ public class VueDuJeu extends HBox {
         choixPionsInitiales.setFont(new Font(20));
 
         vueJoueurCourant = new VueJoueurCourant();
-        //vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
 
         vueAutresJoueurs = new VueAutresJoueurs();
 
@@ -89,12 +87,11 @@ public class VueDuJeu extends HBox {
                 titre,
                 instruction,
                 vueJoueurCourant,
-                //choixPionsInitiales,
                 destinationsInitiales,
                 passer
         );
         menuJoueur.setMinWidth(267);
-        menuJoueur.setStyle("background: transparent;");//-fx-padding: 5;
+        menuJoueur.setStyle("background: transparent;");
         menuJoueur.setAlignment(Pos.TOP_CENTER);
         menuJoueur.setSpacing(10);
 
@@ -202,23 +199,18 @@ public class VueDuJeu extends HBox {
         switch (newValue.getCouleur()){
             case BLEU -> {
                 animationCouleur("#00036b").playFromStart();
-                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #00036b);");
             }
             case ROSE -> {
                 animationCouleur("#8e0078").playFromStart();
-                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0078);");
             }
             case VERT -> {
                 animationCouleur("#008e06").playFromStart();
-                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #008e06);");
             }
             case ROUGE -> {
                 animationCouleur("#8e0000").playFromStart();
-                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8e0000);");
             }
             case JAUNE -> {
                 animationCouleur("#8c8e00").playFromStart();
-                //setStyle("-fx-background-color: linear-gradient(to right top,#590097, #8c8e00);");
             }
         }
     };
@@ -261,7 +253,7 @@ public class VueDuJeu extends HBox {
             translateTransitionI.setFromY(0);
             translateTransitionI.setToY(-300);
             ParallelTransition parallelTransitionT = new ParallelTransition();
-            parallelTransitionT.getChildren().addAll(/*fadeTransitionP,fadeTransitionI,*/translateTransitionP,translateTransitionI);
+            parallelTransitionT.getChildren().addAll(translateTransitionP,translateTransitionI);
 
             ScaleTransition scaleTransition0P = new ScaleTransition(Duration.millis(250), pio);
             scaleTransition0P.setFromX(1);
@@ -319,7 +311,7 @@ public class VueDuJeu extends HBox {
             String inst = instruction.getText();
             choixPionsInitiales.setText(choixPionsInitiales.getText().substring(choixPionsInitiales.getText().length()-2));
             getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPionsInitiales.getText());
-            if (!inst.equals(instruction.getText())){// Si l'instruction à changer (Donc je jeu a accepté l'input)
+            if (!inst.equals(instruction.getText())){
                 menuJoueur.getChildren().set(3,destinationsInitiales);
             }
             if (instruction.getText().contains("Début")){
@@ -346,22 +338,9 @@ public class VueDuJeu extends HBox {
         }
     });
 
-//    private void resetCartesVisibles(){
-//        cartesVisiblePioche.getChildren().clear();
-//        cartesVisibleImages.clear();
-//        for (ICarteTransport carte : jeu.cartesTransportVisiblesProperty()) {
-//            ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
-//            cartesVisibleImages.put(carte,img);
-//            img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-//                jeu.uneCarteTransportAEteChoisie(carte);
-//            });
-//            cartesVisiblePioche.getChildren().add(img);
-//        }
-//    }
-
     private final Map<ICarteTransport,ImageView> cartesVisibleImages = new HashMap<>();
 
-    ListChangeListener<ICarteTransport> CartesPiochable = new ListChangeListener<ICarteTransport>() {
+    ListChangeListener<ICarteTransport> CartesPiochable = new ListChangeListener<>() {
         @Override
         public void onChanged(Change<? extends ICarteTransport> change) {
             while (change.next()) {
