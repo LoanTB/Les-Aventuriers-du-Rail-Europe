@@ -68,6 +68,8 @@ public class VueJoueurCourant extends VBox {
         hbPionWagon.setAlignment(Pos.CENTER);
         nbPionsWagons = new Button();
         nbPionsWagons.setGraphic(hbPionWagon);
+        nbPionsWagons.setManaged(false);
+        nbPionsWagons.setVisible(false);
 
         ImageView pionBateau = new ImageView("images/bouton-pions-bateau.png");
         pionBateau.setFitHeight(25);
@@ -79,6 +81,8 @@ public class VueJoueurCourant extends VBox {
         hbPionBateau.setAlignment(Pos.CENTER);
         nbPionsBateau = new Button();
         nbPionsBateau.setGraphic(hbPionBateau);
+        nbPionsBateau.setManaged(false);
+        nbPionsBateau.setVisible(false);
 
         infos = new HBox();
         infos.getChildren().addAll(nbPionsWagons, nbPionsBateau);
@@ -122,6 +126,13 @@ public class VueJoueurCourant extends VBox {
             carteDestination.getChildren().add(labelCarteDestination);
             spCarteDestination.setManaged(true);
             spCarteDestination.setVisible(true);
+        }
+
+        if (courant.getNbPionsWagon() > 0){
+            nbPionsWagons.setManaged(true);
+            nbPionsWagons.setVisible(true);
+            nbPionsBateau.setManaged(true);
+            nbPionsBateau.setVisible(true);
         }
 
     };
