@@ -66,6 +66,7 @@ public class VueDuJeu extends HBox {
         instruction = new Label();
         instruction.setStyle("-fx-padding: 0 0 10 0; -fx-text-fill: white; -fx-font-size: 15");
         instruction.setWrapText(true);
+        instruction.setPrefWidth(200);
 
         destinationsInitiales = new VBox();
         destinationsInitiales.setStyle("-fx-alignment: center;-fx-padding: 0 0 25 0;-fx-spacing: 5");
