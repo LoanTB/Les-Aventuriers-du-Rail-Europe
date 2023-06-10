@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -103,7 +104,7 @@ public class VueJoueurCourant extends VBox {
         infosPions.getChildren().addAll(nbPionsWagons, nbPionsBateau);
         infosPions.setAlignment(Pos.CENTER);
 
-        getChildren().addAll(avatar,nomJoueur, choixPions, infosPions, spCarteTransport, spCarteDestination);
+        getChildren().addAll(avatar,nomJoueur, spCarteTransport, spCarteDestination, choixPions, infosPions);
         this.setSpacing(10.0);
         this.setAlignment(Pos.CENTER);
     }
@@ -158,24 +159,36 @@ public class VueJoueurCourant extends VBox {
 
     public void creerBindings() {
         getJeu().joueurCourantProperty().addListener(JoueurCourantChange);
-        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,pionsWagonDemmande);
-        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,pionsBateauxDemmande);
+        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsWagonsDemandes();activeChoixPions();});
+        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsBateauxDemandes();activeChoixPions();});
+        choixPions.setOnKeyPressed(key -> {if (key.getCode() == KeyCode.ENTER) {actionsPasser();}});
     }
 
-    EventHandler<? super MouseEvent> pionsWagonDemmande = (mouseEvent -> {
-        getJeu().nouveauxPionsWagonsDemandes();
+    private void activeChoixPions(){
         choixPions.setManaged(true);
         choixPions.setVisible(true);
         infosPions.setManaged(false);
         infosPions.setVisible(false);
-    });
+    }
 
-    EventHandler<? super MouseEvent> pionsBateauxDemmande = (mouseEvent -> {
-        getJeu().nouveauxPionsBateauxDemandes();
-        choixPions.setManaged(true);
-        choixPions.setVisible(true);
-        infosPions.setManaged(false);
-        infosPions.setVisible(false);
-    });
-
+    public boolean actionsPasser(){
+        if (choixPions.isVisible()){
+            while (choixPions.getText().length() < 2){
+                choixPions.setText("0"+choixPions.getText());
+            }
+            String inst = ((VueDuJeu) getScene().getRoot()).getInstruction();
+            choixPions.setText(choixPions.getText().substring(choixPions.getText().length()-2));
+            getJeu().leNombreDePionsSouhaiteAEteRenseigne(choixPions.getText());
+            if (!inst.equals(((VueDuJeu) getScene().getRoot()).getInstruction())){
+                choixPions.setText("");
+                choixPions.setManaged(false);
+                choixPions.setVisible(false);
+                infosPions.setManaged(true);
+                infosPions.setVisible(true);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

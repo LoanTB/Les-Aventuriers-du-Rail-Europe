@@ -323,7 +323,7 @@ public class VueDuJeu extends HBox {
         }
     }
 
-    EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> {
+    private boolean actionsPasser(){
         if (menuJoueur.getChildren().contains(choixPionsInitiales)){
             if (!confirmChoixPionsInitiales()){
                 getJeu().passerAEteChoisi();
@@ -333,7 +333,18 @@ public class VueDuJeu extends HBox {
                     menuJoueur.getChildren().set(3,destinationsInitiales);
                 }
             }
+            return true;
         } else {
+            return false;
+        }
+    }
+
+    public String getInstruction(){
+        return instruction.getText();
+    }
+
+    EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> {
+        if (!actionsPasser() && !vueJoueurCourant.actionsPasser()){
             getJeu().passerAEteChoisi();
         }
     });
