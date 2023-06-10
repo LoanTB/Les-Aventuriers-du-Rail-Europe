@@ -64,20 +64,20 @@ public class VueDuJeu extends HBox {
         passer.setStyle("-fx-background-color: #460101; -fx-text-fill: white");
 
         instruction = new Label();
-        instruction.setStyle("-fx-padding: 0 0 10 0; -fx-text-fill: white; -fx-font-size: 15");
+        instruction.setStyle("-fx-text-fill: white; -fx-font-size: 15");//-fx-padding: 0 0 10 0;
         instruction.setWrapText(true);
         instruction.setPrefWidth(200);
 
         destinationsInitiales = new VBox();
-        destinationsInitiales.setStyle("-fx-alignment: center;-fx-padding: 0 0 25 0;-fx-spacing: 5");
+        destinationsInitiales.setStyle("-fx-alignment: center;-fx-spacing: 5");//-fx-padding: 0 0 25 0;
 
         choixPionsInitiales = new TextField();
-        choixPionsInitiales.setMaxWidth(40);
-        choixPionsInitiales.setFont(new Font(30));
-        choixPionsInitiales.setStyle("-fx-spacing: 5;-fx-padding: 0 0 0 0;");
+        choixPionsInitiales.setMaxWidth(50);
+        choixPionsInitiales.setMinWidth(50);
+        choixPionsInitiales.setFont(new Font(20));
 
         vueJoueurCourant = new VueJoueurCourant();
-        vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
+        //vueJoueurCourant.setStyle("-fx-padding: 0 0 15 0");
 
         vueAutresJoueurs = new VueAutresJoueurs();
 
@@ -85,7 +85,6 @@ public class VueDuJeu extends HBox {
         titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center; -fx-font-size: 17; -fx-text-fill: white");
 
         menuJoueur = new VBox();
-        //menuJoueur.setStyle("-fx-spacing: 200");
         menuJoueur.getChildren().addAll(
                 titre,
                 instruction,
@@ -95,8 +94,9 @@ public class VueDuJeu extends HBox {
                 passer
         );
         menuJoueur.setMinWidth(267);
-        menuJoueur.setStyle("-fx-padding: 5; background: transparent;");
+        menuJoueur.setStyle("background: transparent;");//-fx-padding: 5;
         menuJoueur.setAlignment(Pos.TOP_CENTER);
+        menuJoueur.setSpacing(10);
 
         infosAutresJoueurs = new VBox();
         infosAutresJoueurs.getChildren().add(vueAutresJoueurs);
