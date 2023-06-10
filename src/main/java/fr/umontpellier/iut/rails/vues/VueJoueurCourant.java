@@ -5,15 +5,20 @@ import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Box;
+import javafx.scene.text.Font;
 
 /**
  * Cette classe présente les éléments appartenant au joueur courant.
@@ -28,16 +33,24 @@ public class VueJoueurCourant extends VBox {
     private VBox carteDestination;
     private ImageView avatar;
     private ScrollPane spCarteTransport;
-    private HBox infos;
+    private HBox infosPions;
     private Button nbPionsWagons;
     private Button nbPionsBateau;
     private Label nbPionsW;
     private Label nbPionsB;
     private HBox hbPionWagon;
     private HBox hbPionBateau;
+    private TextField choixPions;
 
     public VueJoueurCourant() {
         nomJoueur = new Label();
+
+        choixPions = new TextField();
+        choixPions.setMaxWidth(50);
+        choixPions.setMinWidth(50);
+        choixPions.setFont(new Font(20));
+        choixPions.setManaged(false);
+        choixPions.setVisible(false);
 
         carteTransport = new VBox();
         carteTransport.setStyle("-fx-alignment: center");
@@ -86,11 +99,11 @@ public class VueJoueurCourant extends VBox {
         nbPionsBateau.setManaged(false);
         nbPionsBateau.setVisible(false);
 
-        infos = new HBox();
-        infos.getChildren().addAll(nbPionsWagons, nbPionsBateau);
-        infos.setAlignment(Pos.CENTER);
+        infosPions = new HBox();
+        infosPions.getChildren().addAll(nbPionsWagons, nbPionsBateau);
+        infosPions.setAlignment(Pos.CENTER);
 
-        getChildren().addAll(avatar,nomJoueur, infos, spCarteTransport, spCarteDestination);
+        getChildren().addAll(avatar,nomJoueur, choixPions, infosPions, spCarteTransport, spCarteDestination);
         this.setSpacing(10.0);
         this.setAlignment(Pos.CENTER);
     }
@@ -145,8 +158,24 @@ public class VueJoueurCourant extends VBox {
 
     public void creerBindings() {
         getJeu().joueurCourantProperty().addListener(JoueurCourantChange);
-        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsWagonsDemandes();});
-        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsBateauxDemandes();});
+        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,pionsWagonDemmande);
+        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,pionsBateauxDemmande);
     }
+
+    EventHandler<? super MouseEvent> pionsWagonDemmande = (mouseEvent -> {
+        getJeu().nouveauxPionsWagonsDemandes();
+        choixPions.setManaged(true);
+        choixPions.setVisible(true);
+        infosPions.setManaged(false);
+        infosPions.setVisible(false);
+    });
+
+    EventHandler<? super MouseEvent> pionsBateauxDemmande = (mouseEvent -> {
+        getJeu().nouveauxPionsBateauxDemandes();
+        choixPions.setManaged(true);
+        choixPions.setVisible(true);
+        infosPions.setManaged(false);
+        infosPions.setVisible(false);
+    });
 
 }
