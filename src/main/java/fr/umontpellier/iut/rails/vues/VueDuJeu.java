@@ -232,9 +232,9 @@ public class VueDuJeu extends HBox {
         vueJoueurCourant.creerBindings();
         plateau.creerBindings();
         jeu.joueurCourantProperty().addListener(joueurCourantChange);
-        jeu.cartesTransportVisiblesProperty().addListener(CartesPiles);
-        piocheWagon.addEventHandler(MouseEvent.MOUSE_CLICKED,piocherWagon);
-        piocheBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,piocherBateau);
+        jeu.cartesTransportVisiblesProperty().addListener(CartesPiochable);
+        piocheWagon.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {animationPioche(cartesPioches(false));});
+        piocheBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {animationPioche(cartesPioches(true));});
         vueAutresJoueurs.creerBindings();
     }
 
@@ -306,14 +306,6 @@ public class VueDuJeu extends HBox {
         return nouveauC;
     }
 
-    EventHandler<? super MouseEvent> piocherBateau = (mouseEvent -> {
-        animationPioche(cartesPioches(true));
-    });
-
-    EventHandler<? super MouseEvent> piocherWagon = (mouseEvent -> {
-        animationPioche(cartesPioches(false));
-    });
-
     public IJeu getJeu() {
         return jeu;
     }
@@ -361,7 +353,7 @@ public class VueDuJeu extends HBox {
 
     private final Map<ICarteTransport,ImageView> cartesVisibleImages = new HashMap<>();
 
-    ListChangeListener<ICarteTransport> CartesPiles = new ListChangeListener<ICarteTransport>() {
+    ListChangeListener<ICarteTransport> CartesPiochable = new ListChangeListener<ICarteTransport>() {
         @Override
         public void onChanged(Change<? extends ICarteTransport> change) {
             while (change.next()) {
