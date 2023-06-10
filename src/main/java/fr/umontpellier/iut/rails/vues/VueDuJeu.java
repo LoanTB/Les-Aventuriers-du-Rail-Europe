@@ -238,24 +238,21 @@ public class VueDuJeu extends HBox {
         vueAutresJoueurs.creerBindings();
     }
 
-    EventHandler<? super MouseEvent> piocherBateau = (mouseEvent -> {
-        IJoueur ancienJ = getJeu().joueurCourantProperty().get();
-        ArrayList<ICarteTransport> ancienC = new ArrayList<>();
-        ancienC.addAll(getJeu().cartesTransportVisiblesProperty());
-        ancienC.addAll(getJeu().joueurCourantProperty().get().getCartesTransport());
-        getJeu().uneCarteBateauAEtePiochee();
-        ArrayList<ICarteTransport> nouveauC = new ArrayList<>();
-        nouveauC.addAll(getJeu().cartesTransportVisiblesProperty());
-        nouveauC.addAll(ancienJ.getCartesTransport());
-        nouveauC.removeAll(ancienC);
+    private void animationPioche(ArrayList<ICarteTransport> cartesPioches){
         ParallelTransition parallelTransition = new ParallelTransition();
-        for (ICarteTransport carte : nouveauC) {
+        for (ICarteTransport carte : cartesPioches) {
             ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
             img.setRotate(-90);
-            ImageView pio = Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625});
-            piocheBateau.getChildren().add(img);
-            piocheBateau.getChildren().add(pio);
-
+            ImageView pio;
+            if (carte.estBateau()){
+                pio = Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625});
+                piocheBateau.getChildren().add(img);
+                piocheBateau.getChildren().add(pio);
+            } else {
+                pio = Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625});
+                piocheWagon.getChildren().add(img);
+                piocheWagon.getChildren().add(pio);
+            }
             TranslateTransition translateTransitionP = new TranslateTransition(Duration.millis(1000),pio);
             translateTransitionP.setFromY(0);
             translateTransitionP.setToY(-300);
@@ -290,60 +287,31 @@ public class VueDuJeu extends HBox {
             parallelTransition.getChildren().addAll(sequentialTransition,parallelTransitionT);
         }
         parallelTransition.play();
+    }
+
+    private ArrayList<ICarteTransport> cartesPioches(boolean bateau){
+        IJoueur ancienJ = getJeu().joueurCourantProperty().get();
+        ArrayList<ICarteTransport> ancienC = new ArrayList<>();
+        ancienC.addAll(getJeu().cartesTransportVisiblesProperty());
+        ancienC.addAll(getJeu().joueurCourantProperty().get().getCartesTransport());
+        if (bateau){
+            getJeu().uneCarteBateauAEtePiochee();
+        } else {
+            getJeu().uneCarteWagonAEtePiochee();
+        }
+        ArrayList<ICarteTransport> nouveauC = new ArrayList<>();
+        nouveauC.addAll(getJeu().cartesTransportVisiblesProperty());
+        nouveauC.addAll(ancienJ.getCartesTransport());
+        nouveauC.removeAll(ancienC);
+        return nouveauC;
+    }
+
+    EventHandler<? super MouseEvent> piocherBateau = (mouseEvent -> {
+        animationPioche(cartesPioches(true));
     });
 
     EventHandler<? super MouseEvent> piocherWagon = (mouseEvent -> {
-        IJoueur ancienJ = getJeu().joueurCourantProperty().get();
-        ArrayList<ICarteTransport> ancienC = new ArrayList<>();
-        ancienC.addAll(getJeu().cartesTransportVisiblesProperty());
-        ancienC.addAll(getJeu().joueurCourantProperty().get().getCartesTransport());
-        getJeu().uneCarteWagonAEtePiochee();
-        ArrayList<ICarteTransport> nouveauC = new ArrayList<>();
-        nouveauC.addAll(getJeu().cartesTransportVisiblesProperty());
-        nouveauC.addAll(ancienJ.getCartesTransport());
-        nouveauC.removeAll(ancienC);
-        ParallelTransition parallelTransition = new ParallelTransition();
-        for (ICarteTransport carte : nouveauC) {
-            ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
-            img.setRotate(-90);
-            ImageView pio = Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625});
-            piocheWagon.getChildren().add(img);
-            piocheWagon.getChildren().add(pio);
-
-            TranslateTransition translateTransitionP = new TranslateTransition(Duration.millis(1000),pio);
-            translateTransitionP.setFromY(0);
-            translateTransitionP.setToY(-300);
-            TranslateTransition translateTransitionI = new TranslateTransition(Duration.millis(1000),img);
-            translateTransitionI.setFromY(0);
-            translateTransitionI.setToY(-300);
-            ParallelTransition parallelTransitionT = new ParallelTransition();
-            parallelTransitionT.getChildren().addAll(/*fadeTransitionP,fadeTransitionI,*/translateTransitionP,translateTransitionI);
-
-            ScaleTransition scaleTransition0P = new ScaleTransition(Duration.millis(250), pio);
-            scaleTransition0P.setFromX(1);
-            scaleTransition0P.setToX(0);
-            ScaleTransition scaleTransition0I = new ScaleTransition(Duration.millis(250), img);
-            scaleTransition0I.setFromY(1);
-            scaleTransition0I.setToY(0);
-            ParallelTransition parallelTransition0 = new ParallelTransition();
-            parallelTransition0.getChildren().addAll(scaleTransition0P,scaleTransition0I);
-
-            ScaleTransition scaleTransition1I = new ScaleTransition(Duration.millis(500), img);
-            scaleTransition1I.setFromY(0);
-            scaleTransition1I.setToY(1);
-            ParallelTransition parallelTransition1 = new ParallelTransition();
-            parallelTransition1.getChildren().addAll(scaleTransition1I);
-
-            FadeTransition fadeTransitionI = new FadeTransition(Duration.millis(250),img);
-            fadeTransitionI.setFromValue(1);
-            fadeTransitionI.setToValue(0);
-
-            SequentialTransition sequentialTransition = new SequentialTransition (parallelTransition0,parallelTransition1,fadeTransitionI);
-            sequentialTransition.play();
-
-            parallelTransition.getChildren().addAll(sequentialTransition,parallelTransitionT);
-        }
-        parallelTransition.play();
+        animationPioche(cartesPioches(false));
     });
 
     public IJeu getJeu() {
