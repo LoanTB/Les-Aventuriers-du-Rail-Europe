@@ -101,12 +101,10 @@ public class VueDuJeu extends HBox {
         menuJoueur.setAlignment(Pos.TOP_CENTER);
         menuJoueur.setSpacing(10);
 
-        infosAutresJoueurs = new VBox();
-        infosAutresJoueurs.getChildren().add(vueAutresJoueurs);
-
         menuDesJoueurs = new VBox();
-        menuDesJoueurs.getChildren().addAll(menuJoueur, infosAutresJoueurs);
+        menuDesJoueurs.getChildren().addAll(menuJoueur, vueAutresJoueurs);
         menuDesJoueurs.setSpacing(30);
+
 
         VBox boxJeu = new VBox();
         menuJeu = new HBox();
