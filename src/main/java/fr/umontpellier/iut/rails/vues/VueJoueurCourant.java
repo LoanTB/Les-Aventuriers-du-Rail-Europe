@@ -133,7 +133,7 @@ public class VueJoueurCourant extends VBox {
         for(int i=0;i<courant.getCartesTransport().size();i+=2) {
             if (i == courant.getCartesTransport().size() - 1) {
                 img1 = Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125, 125});
-                carteTransport.getChildren().add(img1);
+                carteTransport.getChildren().add(new HBox(img1));
                 int finalI = i;
                 img1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     jeu.uneCarteDuJoueurEstJouee(courant.getCartesTransport().get(finalI));
@@ -151,30 +151,9 @@ public class VueJoueurCourant extends VBox {
                 });
 
             }
-        }
-
-        for (ICarteTransport cartes : courant.getCartesTransport()) {
-            ImageView img = Utils.loadCarte(cartes, new double[]{78.125,125});
-                img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    jeu.uneCarteDuJoueurEstJouee(cartes);
-                });
-                carteTransport.getChildren().add(img);
             spCarteTransport.setManaged(true);
             spCarteTransport.setVisible(true);
         }
-//        for(int i=0;i<courant.getCartesTransport().size();i+=2) {
-//            if (i==courant.getCartesTransport().size()-1){
-//                ImageView img = Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125});
-//                img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-//                    //getJeu().uneCarteDuJoueurEstJouee(img);
-//                });
-//                carteTransport.getChildren().add(img);
-//            } else {
-//                carteTransport.getChildren().add(new HBox(Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125,125}),Utils.loadCarte(courant.getCartesTransport().get(i+1), new double[]{78.125,125})));
-//            }
-//            spCarteTransport.setManaged(true);
-//            spCarteTransport.setVisible(true);
-//        }
 
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
