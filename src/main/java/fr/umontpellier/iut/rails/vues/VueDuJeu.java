@@ -8,8 +8,7 @@ import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -19,7 +18,9 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -117,21 +118,26 @@ public class VueDuJeu extends HBox {
         piocheWagon = new StackPane();
         piocheBateau = new StackPane();
         piocheDestination = new StackPane();
+        ImageView img;
         for (int i=0;i<nbCartesDansPioche;i++){
-            piocheWagon.getChildren().add(Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625}));
-            StackPane.setMargin(piocheWagon.getChildren().get(piocheWagon.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
+            img = Utils.loadImage("images/cartesWagons/dos-WAGON.png", new double[]{145,90.625});
+            piocheWagon.getChildren().add(img);
+            StackPane.setMargin(img,new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
 
-            piocheBateau.getChildren().add(Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625}));
-            StackPane.setMargin(piocheBateau.getChildren().get(piocheBateau.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
+            img = Utils.loadImage("images/cartesWagons/dos-BATEAU.png", new double[]{145,90.625});
+            piocheBateau.getChildren().add(img);
+            StackPane.setMargin(img,new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
 
-            piocheDestination.getChildren().add(Utils.loadImage("images/cartesWagons/destinations.png", new double[]{90.625,145}));
-            StackPane.setMargin(piocheDestination.getChildren().get(piocheDestination.getChildren().size()-1),new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
+            img = Utils.loadImage("images/cartesWagons/destinations.png", new double[]{90.625,145});
+            piocheDestination.getChildren().add(img);
+            img.setRotate(90);
+            StackPane.setMargin(img,new Insets(0, 0, 0, -(double)i/nbCartesDansPioche*15));
         }
 
         HBox pioches = new HBox();
         pioches.getChildren().addAll(piocheWagon, piocheBateau, piocheDestination);
-        pioches.setSpacing(10);
-        pioches.setPadding(new Insets(5,10,5,10));
+        pioches.setSpacing(0);
+        //pioches.setPadding(new Insets(5,10,5,10));
 
         cartesVisiblePioche = new HBox();
         cartesVisiblePioche.setSpacing(5.0);
