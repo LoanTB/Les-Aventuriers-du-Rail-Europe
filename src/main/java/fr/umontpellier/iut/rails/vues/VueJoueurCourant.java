@@ -200,26 +200,20 @@ public class VueJoueurCourant extends VBox {
 
     public void creerBindings() {
         getJeu().joueurCourantProperty().addListener(JoueurCourantChange);
-        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {
-            getJeu().nouveauxPionsWagonsDemandes();
-            if (!((VueDuJeu) getScene().getRoot()).getInstruction().contains("Vous ne pouvez plus")){
-                activeChoixPions();
-            }
-        });
-        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {
-            getJeu().nouveauxPionsBateauxDemandes();
-            if (!((VueDuJeu) getScene().getRoot()).getInstruction().contains("Vous ne pouvez plus")){
-                activeChoixPions();
-            }
-        });
+        nbPionsWagons.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsWagonsDemandes();activeChoixPions();});
+        nbPionsBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {getJeu().nouveauxPionsBateauxDemandes();activeChoixPions();});
         choixPions.setOnKeyPressed(key -> {if (key.getCode() == KeyCode.ENTER) {actionsPasser();}});
     }
 
+
+
     private void activeChoixPions(){
-        choixPions.setManaged(true);
-        choixPions.setVisible(true);
-        infosPions.setManaged(false);
-        infosPions.setVisible(false);
+        if (!((VueDuJeu) getScene().getRoot()).getInstruction().contains("Vous ne pouvez plus")){
+            choixPions.setManaged(true);
+            choixPions.setVisible(true);
+            infosPions.setManaged(false);
+            infosPions.setVisible(false);
+        }
     }
 
     public boolean actionsPasser(){
