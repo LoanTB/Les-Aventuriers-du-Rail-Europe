@@ -143,12 +143,12 @@ public class VueDuJeu extends HBox {
         cartesVisiblePioche.setSpacing(5.0);
         cartesVisiblePioche.setAlignment(Pos.CENTER);
 
-        cartesDestination = new HBox();
+//        cartesDestination = new HBox(); ???
+//
+//        cartesVisiblesEtDestination = new VBox();
+//        cartesVisiblesEtDestination.getChildren().addAll(cartesDestination,cartesVisiblePioche);
 
-        cartesVisiblesEtDestination = new VBox();
-        cartesVisiblesEtDestination.getChildren().addAll(cartesDestination,cartesVisiblePioche);
-
-        menuJeu.getChildren().addAll(pioches, cartesVisiblesEtDestination);
+        menuJeu.getChildren().addAll(pioches, cartesVisiblePioche);
         menuJeu.setSpacing(50.0);
         menuJoueur.setStyle("background: transparent;");
     }
