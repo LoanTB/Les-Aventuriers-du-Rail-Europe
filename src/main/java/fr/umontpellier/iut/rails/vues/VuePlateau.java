@@ -7,22 +7,27 @@ import fr.umontpellier.iut.rails.IRoute;
 import fr.umontpellier.iut.rails.mecanique.Route;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Cette classe présente les routes et les villes sur le plateau.
@@ -38,6 +43,7 @@ public class VuePlateau extends Pane {
     private ImageView pionGare;
     private Rectangle rectangleSegment;
     private Circle cerclePort;
+    private Set<Rectangle> routesRECT;
 
     public VuePlateau() {
         try {
@@ -57,25 +63,32 @@ public class VuePlateau extends Pane {
         pionGare = new ImageView();
         pionGare.setFitHeight(206);
         pionGare.setFitWidth(268);
+
+        routesRECT = new HashSet<>();
     }
 
     EventHandler<MouseEvent> choixRoute = event -> {
         IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
-
-        //Image imageW = new Image("images/wagons/image-wagon-" + routeC.proprietaireProperty().get().getCouleur() + ".png");
-
         Rectangle route = (Rectangle) event.getSource();
         jeu.uneRouteAEteChoisie(route.getId());
-
-        //route.setFill(new ImagePattern(imageW));
-
-//        for (IRoute routes : jeu.getRoutes()) {
-//            if (routes.proprietaireProperty().bind()) {
+//        for (IRoute r : routes){
+//            if (r.getNom().equals(route.getId())){
+//                System.out.println(r.proprietaireProperty().get());
+//                if (r.proprietaireProperty().get() != null){
+//                    route.setVisible(true);
+//                    switch (r.proprietaireProperty().get().getCouleur()){
+//                        case BLEU -> route.setStroke(Paint.valueOf("#00036b"));
+//                        case ROSE -> route.setStroke(Paint.valueOf("#8e0078"));
+//                        case VERT -> route.setStroke(Paint.valueOf("#008e06"));
+//                        case ROUGE -> route.setStroke(Paint.valueOf("#8e0000"));
+//                        case JAUNE -> route.setStroke(Paint.valueOf("#8c8e00"));
+//                    }
 //
+//                }
 //            }
 //        }
-
-        System.out.println("DEBUG : Route cliqué ("+route.toString()+")");
+//
+//        System.out.println("DEBUG : Route cliqué ("+route.toString()+")");
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
@@ -110,17 +123,34 @@ public class VuePlateau extends Pane {
         for (String nomRoute : DonneesGraphiques.routes.keySet()) {
             ArrayList<DonneesGraphiques.DonneesSegments> segmentsRoute = DonneesGraphiques.routes.get(nomRoute);
             IRoute route = listeRoutes.stream().filter(r -> r.getNom().equals(nomRoute)).findAny().orElse(null);
+
             for (DonneesGraphiques.DonneesSegments unSegment : segmentsRoute) {
                 rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
+                rectangleSegment.setFill(new ImagePattern(new Image("images/wagons/image-wagon-BLEU.png")));
                 rectangleSegment.setId(nomRoute);
                 rectangleSegment.setRotate(unSegment.getAngle());
                 getChildren().add(rectangleSegment);
                 rectangleSegment.setOnMouseClicked(choixRoute);
+                routesRECT.add(rectangleSegment);
                 bindRectangle(rectangleSegment, unSegment.getXHautGauche(), unSegment.getYHautGauche());
-
+            }
+            if (route != null){
+                final ChangeListener<IJoueur> proprietaireChange = (observable, oldValue, newValue) -> {
+                    for (Rectangle routeRECT : routesRECT){
+                        if (route.getNom().equals(routeRECT.getId())){
+                            if (newValue != null){
+                                routeRECT.setVisible(true);
+                                routeRECT.setFill(new ImagePattern(new Image("images/wagons/image-wagon-BLEU.png")));//"images/wagons/image-wagon-" + newValue.getCouleur() + ".png"
+                                System.out.println("Colorie le rectangle "+routeRECT+" de route "+route+" en la couleur "+newValue.getCouleur());
+                            }
+                        }
+                    }
+                };
+                route.proprietaireProperty().addListener(proprietaireChange);
             }
         }
     }
+
 
     private void bindRedimensionEtCentragePlateau() {
         mapMonde.fitWidthProperty().bind(widthProperty());
