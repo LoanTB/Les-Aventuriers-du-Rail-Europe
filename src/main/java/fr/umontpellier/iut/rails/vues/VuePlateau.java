@@ -75,7 +75,7 @@ public class VuePlateau extends Pane {
 //            }
 //        }
 
-        System.out.println("On a cliqué sur une route");
+        System.out.println("DEBUG : Route cliqué ("+route.toString()+")");
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
@@ -84,7 +84,7 @@ public class VuePlateau extends Pane {
         Circle port = (Circle) event.getSource();
         jeu.unPortAEteChoisi(port.getId());
 
-        System.out.println("On a cliqué sur un port");
+        System.out.println("DEBUG : Port cliqué ("+port.toString()+")");
     };
 
     public void creerBindings() {
