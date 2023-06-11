@@ -122,38 +122,25 @@ public class VueJoueurCourant extends VBox {
         Image portrait = new Image("images/cartesWagons/" + couleurAvatar);
         avatar.setImage(portrait);
 
-        String carte = "";
-
         nomJoueur.setText(courant.getNom());
         nomJoueur.setStyle("-fx-text-fill: white");
         carteTransport.getChildren().clear();
 
-        ImageView img1;
-        ImageView img2;
-        for(int i=0;i<courant.getCartesTransport().size();i+=2) {
-            if (i == courant.getCartesTransport().size() - 1) {
-                img1 = Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125, 125});
-                carteTransport.getChildren().add(new HBox(img1));
-                int finalI = i;
-                img1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    jeu.uneCarteDuJoueurEstJouee(courant.getCartesTransport().get(finalI));
-                });
+        ImageView img;
+        for(ICarteTransport carte : courant.getCartesTransport()) {
+            img = Utils.loadCarte(carte, new double[]{78.125, 125});
+            img.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                jeu.uneCarteDuJoueurEstJouee(carte);
+            });
+            if (carteTransport.getChildren().size() > 0 && ((HBox)carteTransport.getChildren().get(carteTransport.getChildren().size()-1)).getChildren().size() == 1){
+                ((HBox)carteTransport.getChildren().get(carteTransport.getChildren().size()-1)).getChildren().add(img);
             } else {
-                img1 = Utils.loadCarte(courant.getCartesTransport().get(i), new double[]{78.125, 125});
-                img2 = Utils.loadCarte(courant.getCartesTransport().get(i + 1), new double[]{78.125, 125});
-                carteTransport.getChildren().add(new HBox(img1,img2));
-                int finalI1 = i;
-                img1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    jeu.uneCarteDuJoueurEstJouee(courant.getCartesTransport().get(finalI1));
-                });
-                img2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    jeu.uneCarteDuJoueurEstJouee(courant.getCartesTransport().get(finalI1+1));
-                });
-
+                carteTransport.getChildren().add(new HBox(img));
             }
             spCarteTransport.setManaged(true);
             spCarteTransport.setVisible(true);
         }
+
 
         carteDestination.getChildren().clear();
         for (IDestination cd : courant.getDestinations()){
