@@ -1,17 +1,14 @@
 package fr.umontpellier.iut.rails.vues;
 
-import fr.umontpellier.iut.rails.ICarteTransport;
-import fr.umontpellier.iut.rails.IJeu;
-import fr.umontpellier.iut.rails.IJoueur;
-import fr.umontpellier.iut.rails.IRoute;
+import fr.umontpellier.iut.rails.*;
 import fr.umontpellier.iut.rails.mecanique.Route;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -44,6 +41,7 @@ public class VuePlateau extends Pane {
     private Rectangle rectangleSegment;
     private Circle cerclePort;
     private Set<Rectangle> routesRECT;
+    private Set<Circle> portCIRC;
 
     public VuePlateau() {
         try {
@@ -65,6 +63,7 @@ public class VuePlateau extends Pane {
         pionGare.setFitWidth(268);
 
         routesRECT = new HashSet<>();
+        portCIRC = new HashSet<>();
     }
 
     EventHandler<MouseEvent> choixRoute = event -> {
@@ -77,6 +76,7 @@ public class VuePlateau extends Pane {
         IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
         Circle port = (Circle) event.getSource();
         jeu.unPortAEteChoisi(port.getId());
+//        jeu.joueurCourantProperty().addListener();
     };
 
     public void creerBindings() {
@@ -87,13 +87,34 @@ public class VuePlateau extends Pane {
     }
 
     private void ajouterPorts() {
+        List<? extends IVille> listePorts = ((VueDuJeu) getScene().getRoot()).getJeu().getPorts();
         for (String nomPort : DonneesGraphiques.ports.keySet()) {
             DonneesGraphiques.DonneesCerclesPorts positionPortSurPlateau = DonneesGraphiques.ports.get(nomPort);
+            IVille port = listePorts.stream().filter(r -> r.getNom().equals(nomPort)).findAny().orElse(null);
             cerclePort = new Circle(positionPortSurPlateau.centreX(), positionPortSurPlateau.centreY(), DonneesGraphiques.rayonInitial);
             cerclePort.setId(nomPort);
             getChildren().add(cerclePort);
+            portCIRC.add(cerclePort);
             bindCerclePortAuPlateau(positionPortSurPlateau, cerclePort);
             cerclePort.setOnMouseClicked(choixPort);
+
+            final ChangeListener<IJoueur> proprietairePortChange = (observable, oldValue, newValue) -> {
+                for (Circle c : portCIRC) {
+                    if (port.getNom().equals(c.getId())){
+                        if (newValue != null){
+                            c.setVisible(true);
+                            switch (newValue.getCouleur()){
+                                case BLEU -> c.setStyle("-fx-fill: #00036b");
+                                case ROSE -> c.setStyle("-fx-fill: #8e0078");
+                                case VERT -> c.setStyle("-fx-fill: #008e06");
+                                case ROUGE -> c.setStyle("-fx-fill: #8e0000");
+                                case JAUNE -> c.setStyle("-fx-fill: #8c8e00");
+                            }
+                        }
+                    }
+                }
+            };
+            port.proprietaireProperty().addListener(proprietairePortChange);
         }
     }
 
@@ -105,7 +126,7 @@ public class VuePlateau extends Pane {
 
             for (DonneesGraphiques.DonneesSegments unSegment : segmentsRoute) {
                 rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
-                //rectangleSegment.setStyle("-fx-fill: blue");//rectangleSegment.setStyle("-fx-background-image: url('images/wagons/image-wagon-BLEU.png');"); // Debug Test
+                //rectangleSegment.setStyle("-fx-background-image: url('images/wagons/image-wagon-BLEU.png');"); // Debug Test
                 rectangleSegment.setId(nomRoute);
                 rectangleSegment.setRotate(unSegment.getAngle());
                 getChildren().add(rectangleSegment);
@@ -114,7 +135,7 @@ public class VuePlateau extends Pane {
                 bindRectangle(rectangleSegment, unSegment.getXHautGauche(), unSegment.getYHautGauche());
             }
             if (route != null){
-                final ChangeListener<IJoueur> proprietaireChange = (observable, oldValue, newValue) -> {
+                final ChangeListener<IJoueur> proprietaireRouteChange = (observable, oldValue, newValue) -> {
                     for (Rectangle routeRECT : routesRECT){
                         if (route.getNom().equals(routeRECT.getId())){
                             if (newValue != null){
@@ -132,7 +153,7 @@ public class VuePlateau extends Pane {
                         }
                     }
                 };
-                route.proprietaireProperty().addListener(proprietaireChange);
+                route.proprietaireProperty().addListener(proprietaireRouteChange);
             }
         }
     }
