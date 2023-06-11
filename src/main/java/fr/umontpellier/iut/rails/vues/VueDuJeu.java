@@ -23,9 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -259,6 +257,7 @@ public class VueDuJeu extends HBox {
 
     private void animationPioche(ArrayList<ICarteTransport> cartesPioches){
         ParallelTransition parallelTransition = new ParallelTransition();
+        Set<ImageView> temp = new HashSet<>();
         for (ICarteTransport carte : cartesPioches) {
             ImageView img = Utils.loadCarte(carte, new double[]{78.125, 125});
             img.setRotate(-90);
@@ -272,6 +271,7 @@ public class VueDuJeu extends HBox {
                 piocheWagon.getChildren().add(img);
                 piocheWagon.getChildren().add(pio);
             }
+            temp.add(img);temp.add(pio);
             TranslateTransition translateTransitionP = new TranslateTransition(Duration.millis(1000),pio);
             translateTransitionP.setFromY(0);
             translateTransitionP.setToY(-300);
@@ -305,6 +305,10 @@ public class VueDuJeu extends HBox {
 
             parallelTransition.getChildren().addAll(sequentialTransition,parallelTransitionT);
         }
+        parallelTransition.setOnFinished(event -> {
+            piocheBateau.getChildren().removeAll(temp);
+            piocheWagon.getChildren().removeAll(temp);
+        });
         parallelTransition.play();
     }
 
