@@ -71,33 +71,12 @@ public class VuePlateau extends Pane {
         IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
         Rectangle route = (Rectangle) event.getSource();
         jeu.uneRouteAEteChoisie(route.getId());
-//        for (IRoute r : routes){
-//            if (r.getNom().equals(route.getId())){
-//                System.out.println(r.proprietaireProperty().get());
-//                if (r.proprietaireProperty().get() != null){
-//                    route.setVisible(true);
-//                    switch (r.proprietaireProperty().get().getCouleur()){
-//                        case BLEU -> route.setStroke(Paint.valueOf("#00036b"));
-//                        case ROSE -> route.setStroke(Paint.valueOf("#8e0078"));
-//                        case VERT -> route.setStroke(Paint.valueOf("#008e06"));
-//                        case ROUGE -> route.setStroke(Paint.valueOf("#8e0000"));
-//                        case JAUNE -> route.setStroke(Paint.valueOf("#8c8e00"));
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//        System.out.println("DEBUG : Route cliqué ("+route.toString()+")");
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
         IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
-
         Circle port = (Circle) event.getSource();
         jeu.unPortAEteChoisi(port.getId());
-
-        System.out.println("DEBUG : Port cliqué ("+port.toString()+")");
     };
 
     public void creerBindings() {
@@ -126,7 +105,7 @@ public class VuePlateau extends Pane {
 
             for (DonneesGraphiques.DonneesSegments unSegment : segmentsRoute) {
                 rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
-                rectangleSegment.setFill(new ImagePattern(new Image("images/wagons/image-wagon-BLEU.png")));
+                //rectangleSegment.setStyle("-fx-fill: blue");//rectangleSegment.setStyle("-fx-background-image: url('images/wagons/image-wagon-BLEU.png');"); // Debug Test
                 rectangleSegment.setId(nomRoute);
                 rectangleSegment.setRotate(unSegment.getAngle());
                 getChildren().add(rectangleSegment);
@@ -140,8 +119,15 @@ public class VuePlateau extends Pane {
                         if (route.getNom().equals(routeRECT.getId())){
                             if (newValue != null){
                                 routeRECT.setVisible(true);
-                                routeRECT.setFill(new ImagePattern(new Image("images/wagons/image-wagon-BLEU.png")));//"images/wagons/image-wagon-" + newValue.getCouleur() + ".png"
-                                System.out.println("Colorie le rectangle "+routeRECT+" de route "+route+" en la couleur "+newValue.getCouleur());
+                                //routeRECT.setFill(new ImagePattern(new Image("images/wagons/image-wagon-" + newValue.getCouleur() + ".png"))); // Marche pas pour raison obscure
+                                switch (newValue.getCouleur()){
+                                    case BLEU -> routeRECT.setStyle("-fx-fill: #00036b");
+                                    case ROSE -> routeRECT.setStyle("-fx-fill: #8e0078");
+                                    case VERT -> routeRECT.setStyle("-fx-fill: #008e06");
+                                    case ROUGE -> routeRECT.setStyle("-fx-fill: #8e0000");
+                                    case JAUNE -> routeRECT.setStyle("-fx-fill: #8c8e00");
+                                }
+                                //System.out.println("Colorie le rectangle "+routeRECT+" de route "+route+" en la couleur "+newValue.getCouleur()+""); // DEBUG
                             }
                         }
                     }
