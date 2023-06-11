@@ -117,6 +117,8 @@ public class VueDuJeu extends HBox {
         getChildren().addAll(boxJeu,menuDesJoueurs);
 
         int nbCartesDansPioche = 3;
+        ImageView pad = Utils.loadImage("images/cartesWagons/destinations.png", new double[]{90.625,145});
+        pad.setRotate(90);
         piocheWagon = new StackPane();
         piocheBateau = new StackPane();
         piocheDestination = new StackPane();
@@ -254,9 +256,14 @@ public class VueDuJeu extends HBox {
         piocheWagon.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {animationPioche(cartesPioches(false));});
         piocheBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {animationPioche(cartesPioches(true));});
         piocheDestination.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {
-            demmandeNouvelleDestinations = true;
-            getJeu().nouvelleDestinationDemandee();
-            menuJoueur.getChildren().add(3,destinationsInitiales);
+            if (!demmandeNouvelleDestinations){
+                String ancienne = instruction.getText();
+                getJeu().nouvelleDestinationDemandee();
+                if (!ancienne.equals(instruction.getText())){
+                    demmandeNouvelleDestinations = true;
+                    menuJoueur.getChildren().add(3,destinationsInitiales);
+                }
+            }
         });
         vueAutresJoueurs.creerBindings();
     }
