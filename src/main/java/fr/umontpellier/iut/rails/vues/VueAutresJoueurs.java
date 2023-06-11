@@ -99,7 +99,7 @@ public class VueAutresJoueurs extends VBox {
                 infosJoueur.getChildren().addAll(avatarEtNom, scoreEtPions, top);
                 infosJoueur.setSpacing(20);
                 infosJoueur.setAlignment(Pos.CENTER);
-                switch (joueur.getCouleur()) {//Utils.reverseString(Utils.reverseString(getScene().getRoot().getStyle()).substring(2,9))
+                switch (joueur.getCouleur()) {
                     case BLEU ->
                             infosJoueur.setBackground(new Background(new BackgroundFill(Color.valueOf("#00036b"), new CornerRadii(10), null)));
                     case ROSE ->

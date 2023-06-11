@@ -1,9 +1,6 @@
 package fr.umontpellier.iut.rails.vues;
 
-import fr.umontpellier.iut.rails.ICarteTransport;
-import fr.umontpellier.iut.rails.IDestination;
-import fr.umontpellier.iut.rails.IJeu;
-import fr.umontpellier.iut.rails.IJoueur;
+import fr.umontpellier.iut.rails.*;
 import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
@@ -43,6 +40,7 @@ public class VueDuJeu extends HBox {
     private TextField choixPionsInitiales;
     private VueJoueurCourant vueJoueurCourant;
     private VueAutresJoueurs vueAutresJoueurs;
+    private VueResultats vueResultats;
     private VBox menuJoueur;
     private HBox menuJeu;
     private StackPane piocheWagon;
@@ -78,6 +76,8 @@ public class VueDuJeu extends HBox {
         vueJoueurCourant = new VueJoueurCourant();
 
         vueAutresJoueurs = new VueAutresJoueurs();
+
+        vueResultats = new VueResultats(new RailsIHM());
 
         Label titre = new Label("Aventuriers du Rail");
         titre.setStyle("-fx-padding: 25 0 25 0; -fx-text-alignment: center; -fx-alignment: center; -fx-font-size: 17; -fx-text-fill: white");

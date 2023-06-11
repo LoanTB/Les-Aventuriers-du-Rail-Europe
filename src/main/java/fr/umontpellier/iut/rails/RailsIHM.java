@@ -77,12 +77,13 @@ public class RailsIHM extends Application {
     };
 
     public void arreterJeu() {
-        /*Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
-        alert.setContentText("On arrête de jouer ?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Fermeture du jeu");
+        alert.setContentText("Voulez-vous vraiment quitter ?\nToute progression non sauvegardée sera perdue.\nDe toute façon, vous ne pouvez pas sauvegarder.");
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {*/
-        Platform.exit();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Platform.exit();
+        }
     }
 
     public Jeu getJeu() {
