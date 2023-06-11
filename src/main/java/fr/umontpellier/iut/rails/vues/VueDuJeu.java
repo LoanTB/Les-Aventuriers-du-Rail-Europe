@@ -47,15 +47,12 @@ public class VueDuJeu extends HBox {
     private VueJoueurCourant vueJoueurCourant;
     private VueAutresJoueurs vueAutresJoueurs;
     private VBox menuJoueur;
-    private VBox infosAutresJoueurs;
     private HBox menuJeu;
     private StackPane piocheWagon;
     private StackPane piocheBateau;
     private StackPane piocheDestination;
     private HBox cartesVisiblePioche;
     private VBox menuDesJoueurs;
-    private VBox cartesVisiblesEtDestination;
-    private HBox cartesDestination;
     private boolean demmandeNouvelleDestinations;
 
     public VueDuJeu(IJeu jeu) {
@@ -144,11 +141,6 @@ public class VueDuJeu extends HBox {
         cartesVisiblePioche = new HBox();
         cartesVisiblePioche.setSpacing(5.0);
         cartesVisiblePioche.setAlignment(Pos.CENTER);
-
-//        cartesDestination = new HBox(); ???
-//
-//        cartesVisiblesEtDestination = new VBox();
-//        cartesVisiblesEtDestination.getChildren().addAll(cartesDestination,cartesVisiblePioche);
 
         menuJeu.getChildren().addAll(pioches, cartesVisiblePioche);
         menuJeu.setSpacing(50.0);
