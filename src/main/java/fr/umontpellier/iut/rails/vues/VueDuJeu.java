@@ -56,10 +56,12 @@ public class VueDuJeu extends HBox {
     private VBox menuDesJoueurs;
     private VBox cartesVisiblesEtDestination;
     private HBox cartesDestination;
+    private boolean demmandeNouvelleDestinations;
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
         setStyle("-fx-background-color: linear-gradient(to right top, #590097 100%, #590097);");
+        demmandeNouvelleDestinations = false;
 
         plateau = new VuePlateau();
 
@@ -176,7 +178,12 @@ public class VueDuJeu extends HBox {
                     }
                 }
                 if (destinationsInitiales.getChildren().size() == 0){
-                    menuJoueur.getChildren().set(3,choixPionsInitiales);
+                    if (demmandeNouvelleDestinations){
+                        demmandeNouvelleDestinations = false;
+                        menuJoueur.getChildren().remove(3);
+                    } else {
+                        menuJoueur.getChildren().set(3,choixPionsInitiales);
+                    }
                 }
             }
         }
@@ -246,6 +253,11 @@ public class VueDuJeu extends HBox {
         jeu.cartesTransportVisiblesProperty().addListener(CartesPiochable);
         piocheWagon.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {animationPioche(cartesPioches(false));});
         piocheBateau.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {animationPioche(cartesPioches(true));});
+        piocheDestination.addEventHandler(MouseEvent.MOUSE_CLICKED,event -> {
+            demmandeNouvelleDestinations = true;
+            getJeu().nouvelleDestinationDemandee();
+            menuJoueur.getChildren().add(3,destinationsInitiales);
+        });
         vueAutresJoueurs.creerBindings();
     }
 
