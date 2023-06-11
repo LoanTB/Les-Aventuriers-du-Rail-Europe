@@ -172,9 +172,8 @@ public class VueJoueurCourant extends VBox {
     }
 
 
-
     private void activeChoixPions(){
-        if (!((VueDuJeu) getScene().getRoot()).getInstruction().contains("Vous ne pouvez plus")){
+        if (!((VueDuJeu) getScene().getRoot()).getInstruction().contains("Vous ne pouvez plus") && ((VueDuJeu) getScene().getRoot()).getInstruction().contains("Saisissez un nombre")){
             choixPions.setManaged(true);
             choixPions.setVisible(true);
             infosPions.setManaged(false);
